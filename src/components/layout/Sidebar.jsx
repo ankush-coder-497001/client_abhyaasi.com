@@ -1,0 +1,106 @@
+import React, { useState } from "react";
+import {
+  Sidebar as SidebarUI,
+  SidebarBody,
+  SidebarLink,
+} from "../../aceternity-ui/sidebar";
+import {
+  IconBrandDatabricks,
+  IconBrandTabler,
+  IconBriefcase,
+  IconSettings,
+  IconUserBolt,
+} from "@tabler/icons-react";
+import { motion } from "motion/react";
+import { cn } from "../../lib/utils";
+
+function Sidebar({ children }) {
+  const links = [
+    {
+      label: "Dashboard",
+      href: "/dashboard",
+      icon: <IconBrandTabler className="h-5 w-5 shrink-0 text-neutral-200" />,
+    },
+    {
+      label: "Profile",
+      href: "/profile",
+      icon: <IconUserBolt className="h-5 w-5 shrink-0 text-neutral-200" />,
+    },
+    {
+      label: "Courses",
+      href: "/courses",
+      icon: <IconBriefcase className="h-5 w-5 shrink-0 text-neutral-200" />,
+    },
+    {
+      label: "Professions",
+      href: "/professions",
+      icon: (
+        <IconBrandDatabricks className="h-5 w-5 shrink-0 text-neutral-200" />
+      ),
+    },
+  ];
+  const [open, setOpen] = useState(false);
+  return (
+    <div
+      className={cn(
+        "flex w-full flex-1 flex-col overflow-hidden md:flex-row h-screen"
+      )}
+    >
+      <SidebarUI open={open} setOpen={setOpen}>
+        <SidebarBody className="justify-between gap-10">
+          <div className="flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
+            {open ? <Logo /> : <LogoIcon />}
+            <div className="mt-8 flex flex-col gap-2">
+              {links.map((link, idx) => (
+                <SidebarLink key={idx} link={link} />
+              ))}
+            </div>
+          </div>
+          <div>
+            <SidebarLink
+              link={{
+                label: "Setting",
+                href: "/setting",
+                icon: (
+                  <IconSettings className="h-5 w-5 shrink-0 text-neutral-200" />
+                ),
+              }}
+            />
+          </div>
+        </SidebarBody>
+      </SidebarUI>
+      <div className="overflow-auto lg:p-6 w-full bg-gradient-to-br from-gray-50 to-gray-100 ">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+export default Sidebar;
+export const Logo = () => {
+  return (
+    <button
+      href="#"
+      className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal"
+    >
+      <div className="h-5 w-6 shrink-0 rounded-tl-lg rounded-tr-sm rounded-br-lg rounded-bl-sm bg-white" />
+      <motion.span
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="font-medium whitespace-pre text-white"
+      >
+        Abhyaasi
+      </motion.span>
+    </button>
+  );
+};
+export const LogoIcon = () => {
+  return (
+    <a
+      href="#"
+      className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black"
+    >
+      <div className="h-5 w-6 shrink-0 rounded-tl-lg rounded-tr-sm rounded-br-lg rounded-bl-sm bg-white" />
+    </a>
+  );
+};

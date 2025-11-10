@@ -1,35 +1,35 @@
-import './App.css'
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import UnderConstruction from "./pages/under-construction/UnderConstruction.jsx";
+import DashboardLayout from "./components/layout/DashboardLayout.jsx";
+import ProtectedRoute from "./utils/ProtectedRoute.jsx";
+import Dashboard from "./pages/dashboard/Dashboard.jsx";
+import Profile from "./pages/dashboard/Profile.jsx";
+import Courses from "./pages/dashboard/Courses.jsx";
+import Professions from "./pages/dashboard/Professions.jsx";
+import Setting from "./pages/dashboard/Setting.jsx";
 
 function App() {
   return (
-    <div className="app-root">
-      <header className="top-bar">
-        <div className="brand">Abhyasi</div>
-      </header>
+    <BrowserRouter>
+      <Routes>
+        {/* public routes */}
+        <Route path="/" element={<UnderConstruction />} />
 
-      <main className="content">
-        <div className="card">
-          <div className="icon" aria-hidden>
-            <svg width="120" height="120" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-              <path d="M2 20h20" stroke="#FFB020" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M5 20V9a7 7 0 0 1 14 0v11" stroke="#FFB020" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M9 11h6" stroke="#222" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              <circle cx="12" cy="5" r="2" fill="#FFB020" />
-            </svg>
-          </div>
-
-          <h1>We&rsquo;re building something great</h1>
-          <p className="lead">This site is under construction. We&rsquo;re working hard to bring you an improved experience. Check back soon.</p>
-
-          <div className="progress" aria-hidden>
-            <span className="dot" />
-            <span className="dot" />
-            <span className="dot" />
-          </div>
-        </div>
-      </main>
-    </div>
-  )
+        {/* protected routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route element={<DashboardLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/courses" element={<Courses />} />
+            <Route path="/professions" element={<Professions />} />
+            <Route path="/setting" element={<Setting />} /> 
+          </Route>
+        </Route>
+        {/* fall back */}
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
