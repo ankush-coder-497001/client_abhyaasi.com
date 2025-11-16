@@ -13,27 +13,29 @@ export function ContainerTextFlip({
 }) {
   const id = useId();
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
-  const [width, setWidth] = useState(100);
+  const [widths, setWidths] = useState({});
   const textRef = React.useRef(null);
 
-  const updateWidthForWord = () => {
-    if (textRef.current) {
-      // Add some padding to the text width (30px on each side)
-      // @ts-ignore
-      const textWidth = textRef.current.scrollWidth + 30;
-      setWidth(textWidth);
-    }
-  };
-
+  // Pre-calculate all widths on mount
   useEffect(() => {
-    // Update width whenever the word changes
-    updateWidthForWord();
-  }, [currentWordIndex]);
+    const calculateAllWidths = () => {
+      const newWidths = {};
+      words.forEach((word, index) => {
+        // Estimate width based on character count
+        newWidths[index] = Math.max(word.length * 8 + 30, 60); // fallback width calculation
+      });
+      setWidths(newWidths);
+    };
+
+    calculateAllWidths();
+  }, [words]);
+
+  // Get current width (with fallback)
+  const currentWidth = widths[currentWordIndex] || 80;
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentWordIndex((prevIndex) => (prevIndex + 1) % words.length);
-      // Width will be updated in the effect that depends on currentWordIndex
     }, interval);
 
     return () => clearInterval(intervalId);
@@ -41,24 +43,22 @@ export function ContainerTextFlip({
 
   return (
     <motion.div
-      layout
-      layoutId={`words-here-${id}`}
-      animate={{ width }}
-      transition={{ duration: animationDuration / 2000 }}
-      className={cn(
-        "",
-        className
-      )}
-      key={words[currentWordIndex]}
+      animate={{ width: currentWidth }}
+      transition={{
+        duration: animationDuration / 2000,
+        ease: "easeInOut",
+      }}
+      className={cn("inline-block overflow-hidden", className)}
+      style={{ willChange: "width" }}
     >
       <motion.div
+        key={words[currentWordIndex]}
         transition={{
           duration: animationDuration / 1000,
           ease: "easeInOut",
         }}
-        className={cn("inline-block", textClassName)}
+        className={cn("inline-block whitespace-nowrap", textClassName)}
         ref={textRef}
-        layoutId={`word-div-${words[currentWordIndex]}-${id}`}
       >
         <motion.div className="inline-block">
           {words[currentWordIndex].split("").map((letter, index) => (

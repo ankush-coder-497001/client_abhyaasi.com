@@ -2,6 +2,7 @@ import React from "react";
 import { FaBookOpen, FaPlayCircle } from "react-icons/fa";
 import { MdCheckCircle } from "react-icons/md";
 import { GiTrophy } from "react-icons/gi";
+import Button from "../ui/Button";
 
 const OngoingLearning = ({ type }) => {
   const course = {
@@ -114,8 +115,7 @@ const OngoingLearning = ({ type }) => {
         </div>
       </div>
 
-      {/* Resume Button */}
-      <button className="relative z-10 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition mt-2 cursor-pointer text-sm sm:text-base">
+       <button className="relative z-10 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition mt-2 cursor-pointer text-sm sm:text-base">
         <FaPlayCircle className="text-base flex-shrink-0" />
         <span>Resume</span>
       </button>
