@@ -36,7 +36,7 @@ const LearnerHistory = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+    <>
       {/* Completed Courses */}
       <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-md hover:shadow-xl transition-all border-l-4 border-blue-500">
         <div className="flex items-center justify-between mb-3">
@@ -62,7 +62,7 @@ const LearnerHistory = () => {
               </div>
               <button
                 onClick={() => (window.location.href = course.link)}
-                className="flex items-center justify-center gap-1 bg-blue-600 text-white text-xs sm:text-sm px-2 sm:px-3 py-1.5 rounded-md hover:bg-blue-700 transition-all whitespace-nowrap flex-shrink-0"
+                className="flex items-center justify-center gap-1 bg-blue-600 text-white text-xs sm:text-sm px-2 sm:px-3 py-1.5 rounded-md hover:bg-blue-700 transition-all whitespace-nowrap flex-shrink-0 cursor-pointer"
               >
                 Go <MdArrowForward />
               </button>
@@ -96,7 +96,7 @@ const LearnerHistory = () => {
               </div>
               <button
                 onClick={() => (window.location.href = prof.link)}
-                className="flex items-center justify-center gap-1 bg-pink-600 text-white text-xs sm:text-sm px-2 sm:px-3 py-1.5 rounded-md hover:bg-pink-700 transition-all whitespace-nowrap flex-shrink-0"
+                className="flex items-center justify-center gap-1 bg-pink-600 text-white text-xs sm:text-sm px-2 sm:px-3 py-1.5 rounded-md hover:bg-pink-700 transition-all whitespace-nowrap flex-shrink-0 cursor-pointer"
               >
                 Go <MdArrowForward />
               </button>
@@ -104,7 +104,7 @@ const LearnerHistory = () => {
           ))}
         </ul>
       </div>
-    </div>
+    </>
   );
 };
 

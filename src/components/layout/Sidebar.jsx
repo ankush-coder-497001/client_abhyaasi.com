@@ -19,24 +19,22 @@ function Sidebar({ children }) {
     {
       label: "Dashboard",
       href: "/dashboard",
-      icon: <IconBrandTabler className="h-5 w-5 shrink-0 text-neutral-200" />,
+      icon: <IconBrandTabler className="h-5 w-5 shrink-0 text-white" />,
     },
     {
       label: "Profile",
       href: "/profile",
-      icon: <IconUserBolt className="h-5 w-5 shrink-0 text-neutral-200" />,
+      icon: <IconUserBolt className="h-5 w-5 shrink-0 text-white" />,
     },
     {
       label: "Courses",
       href: "/courses",
-      icon: <IconBriefcase className="h-5 w-5 shrink-0 text-neutral-200" />,
+      icon: <IconBriefcase className="h-5 w-5 shrink-0 text-white" />,
     },
     {
       label: "Professions",
       href: "/professions",
-      icon: (
-        <IconBrandDatabricks className="h-5 w-5 shrink-0 text-neutral-200" />
-      ),
+      icon: <IconBrandDatabricks className="h-5 w-5 shrink-0 text-white" />,
     },
   ];
   const [open, setOpen] = useState(false);
@@ -61,9 +59,7 @@ function Sidebar({ children }) {
               link={{
                 label: "Setting",
                 href: "/setting",
-                icon: (
-                  <IconSettings className="h-5 w-5 shrink-0 text-neutral-200" />
-                ),
+                icon: <IconSettings className="h-5 w-5 shrink-0 text-white" />,
               }}
             />
           </div>
@@ -80,7 +76,6 @@ export default Sidebar;
 export const Logo = () => {
   return (
     <button
-      href="#"
       className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal"
     >
       <div className="h-5 w-6 shrink-0 rounded-tl-lg rounded-tr-sm rounded-br-lg rounded-bl-sm bg-white" />

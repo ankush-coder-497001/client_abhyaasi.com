@@ -1,11 +1,3 @@
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
 import DashboardHeader from "../../components/dashboard/DashboardHeader";
 import OngoingLearning from "../../components/dashboard/OngoingLearning";
 import AttendanceCalendar from "../../components/dashboard/AttendanceCalendar";
@@ -31,48 +23,49 @@ const Dashboard = () => {
       {/* Ongoing Learning Section */}
       <div className="mb-8">
         <h1
-          className="text-xl md:text-2xl font-bold mb-4"
-          style={{ color: "black" }}
+          className="mb-4 font-bold"
+          style={{ color: "black", fontSize: "15px" }}
         >
           Ongoing Learning
         </h1>
-        <div className="overflow-x-auto scrollbar-hide">
-          <div className="flex gap-4 pb-2 min-w-min md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:gap-4">
-            {/* Ongoing Course */}
-            <OngoingLearning type="course" />
-            <OngoingLearning type="profession" />
-            <OngoingLearning type="course" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+          {/* Ongoing Course */}
+          <OngoingLearning type="course" />
 
-            {/* Ongoing Profession */}
-            <OngoingLearning type="profession" />
-          </div>
+          {/* Ongoing Profession */}
+          <OngoingLearning type="profession" />
         </div>
       </div>
 
       {/* Attendance Section */}
       <div className="mb-8">
         <h1
-          className="text-xl md:text-2xl font-bold mb-4"
-          style={{ color: "black" }}
+          className="font-bold mb-4"
+          style={{ color: "black", fontSize: "15px" }}
         >
           Attendance
         </h1>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 auto-rows-max lg:auto-rows-fr">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
           {/* Calendar */}
-          <div className="lg:col-span-1 h-fit lg:h-full">
-            <AttendanceCalendar />
-          </div>
+
+          <AttendanceCalendar />
 
           {/* Chart */}
-          <div className="lg:col-span-2 h-96 sm:h-full">
-            <AttendanceChart />
-          </div>
+          <AttendanceChart />
         </div>
       </div>
 
       {/* Learner History */}
       <div>
-        <LearnerHistory />
+        <h1
+          className="font-bold mb-4"
+          style={{ color: "black", fontSize: "15px" }}
+        >
+          Learner History
+        </h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+          <LearnerHistory />
+        </div>
       </div>
     </div>
   );

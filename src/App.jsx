@@ -22,7 +22,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/courses" element={<Courses />} />
             <Route path="/professions" element={<Professions />} />
-            <Route path="/setting" element={<Setting />} /> 
+            <Route path="/setting" element={<Setting />} />
           </Route>
         </Route>
         {/* fall back */}
