@@ -58,7 +58,7 @@ const FloatingDockMobile = ({ items, className }) => {
                 <Link
                   to={item.href}
                   key={item.title}
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 hover:bg-blue-700 transition-colors"
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-white hover:bg-gray-100 border-gray-500 transition-colors"
                 >
                   <div className="h-4 w-4 text-white">{item.icon}</div>
                 </Link>
@@ -84,7 +84,7 @@ const FloatingDockDesktop = ({ items, className }) => {
       onMouseMove={(e) => mouseX.set(e.pageX)}
       onMouseLeave={() => mouseX.set(Infinity)}
       className={cn(
-        "mx-auto hidden h-16 items-end gap-4 rounded-2xl bg-blue-600 px-4 pb-3 md:flex pointer-events-auto",
+        "mx-auto hidden h-16 items-end gap-4 rounded-2xl bg-white border border-gray-500 px-4 pb-3 md:flex pointer-events-auto",
         className
       )}
     >
@@ -145,7 +145,7 @@ function IconContainer({ mouseX, title, icon, href }) {
         style={{ width, height }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        className="relative flex aspect-square items-center justify-center rounded-full bg-blue-500 hover:bg-blue-600 transition-colors"
+        className="relative flex aspect-square items-center justify-center rounded-full bg-black  transition-colors"
       >
         <AnimatePresence>
           {hovered && (
@@ -161,7 +161,7 @@ function IconContainer({ mouseX, title, icon, href }) {
         </AnimatePresence>
         <motion.div
           style={{ width: widthIcon, height: heightIcon }}
-          className="flex items-center justify-center text-white"
+          className="flex items-center justify-center text-black"
         >
           {icon}
         </motion.div>

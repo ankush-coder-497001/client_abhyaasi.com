@@ -1,71 +1,41 @@
+import "../../styles/premium-dashboard.css";
 import DashboardHeader from "../../components/dashboard/DashboardHeader";
-import OngoingLearning from "../../components/dashboard/OngoingLearning";
-import AttendanceCalendar from "../../components/dashboard/AttendanceCalendar";
-import AttendanceChart from "../../components/dashboard/AttendanceChart";
-import LearnerHistory from "../../components/dashboard/LearnerHistory";
-
-const chartData = [
-  { name: "Mon", progress: 40 },
-  { name: "Tue", progress: 65 },
-  { name: "Wed", progress: 50 },
-  { name: "Thu", progress: 80 },
-  { name: "Fri", progress: 60 },
-  { name: "Sat", progress: 90 },
-  { name: "Sun", progress: 70 },
-];
+import MinimalProgressBar from "../../components/dashboard/MinimalProgressBar";
+import ProfileSection from "../../components/dashboard/ProfileSection";
+import PremiumCalendar from "../../components/dashboard/PremiumCalendar";
+import LeaderboardCard from "../../components/dashboard/LeaderboardCard";
+import CourseHistory from "../../components/dashboard/CourseHistory";
 
 const Dashboard = () => {
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-8 py-5 pb-12">
-      {/* Header */}
-      <DashboardHeader />
-
-      {/* Ongoing Learning Section */}
-      <div className="mb-8">
-        <h1
-          className="mb-4 font-bold"
-          style={{ color: "black", fontSize: "15px" }}
-        >
-          Ongoing Learning
-        </h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
-          {/* Ongoing Course */}
-          <OngoingLearning type="course" />
-
-          {/* Ongoing Profession */}
-          <OngoingLearning type="profession" />
-        </div>
+    <div className="min-h-screen bg-slate-50">
+      {/* Top Header: Greeting, Name, Message, Browse Button */}
+      <div className="px-4 md:px-6">
+        <DashboardHeader />
       </div>
 
-      {/* Attendance Section */}
-      <div className="mb-8">
-        <h1
-          className="font-bold mb-4"
-          style={{ color: "black", fontSize: "15px" }}
-        >
-          Attendance
-        </h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
-          {/* Calendar */}
+      {/* Main Content: Profile and Calendar */}
+      <div className="px-4 md:px-6 pb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-6 gap-6">
+          {/* Left: Profile and Progress Bar */}
+          <div className="lg:col-span-2 flex flex-col gap-4">
+            <MinimalProgressBar />
+            <ProfileSection />
+          </div>
 
-          <AttendanceCalendar />
+          {/* Center: Calendar */}
+          <div className="lg:col-span-2">
+            <PremiumCalendar />
+          </div>
 
-          {/* Chart */}
-          <AttendanceChart />
+          {/* Right: Leaderboard */}
+          <div className="lg:col-span-2">
+            <LeaderboardCard />
+          </div>
         </div>
-      </div>
-
-      {/* Learner History */}
-      <div>
-        <h1
-          className="font-bold mb-4"
-          style={{ color: "black", fontSize: "15px" }}
-        >
-          Learner History
-        </h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
-          <LearnerHistory />
-        </div>
+      </div>      {/* Bottom: Course History */}
+      <div className="px-4 md:px-6 pb-6">
+        <CourseHistory />
       </div>
     </div>
   );

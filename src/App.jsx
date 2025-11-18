@@ -1,4 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import "./styles/premium-dashboard.css";
 import UnderConstruction from "./pages/under-construction/UnderConstruction.jsx";
 import DashboardLayout from "./components/layout/DashboardLayout.jsx";
 import ProtectedRoute from "./utils/ProtectedRoute.jsx";
