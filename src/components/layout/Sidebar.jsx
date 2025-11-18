@@ -19,22 +19,22 @@ function Sidebar({ children }) {
     {
       label: "Dashboard",
       href: "/dashboard",
-      icon: <IconBrandTabler className="h-5 w-5 shrink-0 text-white" />,
+      icon: <IconBrandTabler className="h-5 w-5 shrink-0 text-black" />,
     },
     {
       label: "Profile",
       href: "/profile",
-      icon: <IconUserBolt className="h-5 w-5 shrink-0 text-white" />,
+      icon: <IconUserBolt className="h-5 w-5 shrink-0 text-black" />,
     },
     {
       label: "Courses",
       href: "/courses",
-      icon: <IconBriefcase className="h-5 w-5 shrink-0 text-white" />,
+      icon: <IconBriefcase className="h-5 w-5 shrink-0 text-black" />,
     },
     {
       label: "Professions",
       href: "/professions",
-      icon: <IconBrandDatabricks className="h-5 w-5 shrink-0 text-white" />,
+      icon: <IconBrandDatabricks className="h-5 w-5 shrink-0 text-black" />,
     },
   ];
   const [open, setOpen] = useState(false);
@@ -46,7 +46,7 @@ function Sidebar({ children }) {
     >
       <SidebarUI open={open} setOpen={setOpen}>
         <SidebarBody className="justify-between gap-10">
-          <div className="flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
+          <div className="flex flex-1 text-black flex-col overflow-x-hidden overflow-y-auto">
             {open ? <Logo /> : <LogoIcon />}
             <div className="mt-8 flex flex-col gap-2">
               {links.map((link, idx) => (
@@ -59,13 +59,13 @@ function Sidebar({ children }) {
               link={{
                 label: "Setting",
                 href: "/setting",
-                icon: <IconSettings className="h-5 w-5 shrink-0 text-white" />,
+                icon: <IconSettings className="h-5 w-5 shrink-0 text-black" />,
               }}
             />
           </div>
         </SidebarBody>
       </SidebarUI>
-      <div className="overflow-auto lg:p-6 w-full bg-gradient-to-br from-gray-50 to-gray-100 ">
+      <div className="overflow-auto lg:p-6  w-full bg-gradient-to-br from-gray-50 to-gray-100 ">
         {children}
       </div>
     </div>
@@ -78,11 +78,11 @@ export const Logo = () => {
     <button
       className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal"
     >
-      <div className="h-5 w-6 shrink-0 rounded-tl-lg rounded-tr-sm rounded-br-lg rounded-bl-sm bg-white" />
+      <div className="h-5 w-6 shrink-0 rounded-tl-lg rounded-tr-sm rounded-br-lg rounded-bl-sm bg-black" />
       <motion.span
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="font-medium whitespace-pre text-white"
+        className="font-medium whitespace-pre text-black"
       >
         Abhyaasi
       </motion.span>
