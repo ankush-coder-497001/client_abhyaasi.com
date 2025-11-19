@@ -1,0 +1,151 @@
+.auth-form-wrapper {
+  width: 100%;
+  max-width: 320px;
+}
+
+.form-header {
+  margin-bottom: 22px;
+  animation: fadeInDown 0.6s ease-out;
+}
+
+.form-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin: 0 0 6px 0;
+}
+
+.form-subtitle {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+
+.form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.forgot-password-link,
+.switch-auth-link,
+.back-link {
+  background: none;
+  border: none;
+  color: #2563eb;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.forgot-password-link:hover,
+.switch-auth-link:hover,
+.back-link:hover {
+  color: #1e40af;
+  text-decoration: underline;
+}
+
+.forgot-password-link {
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 14px 0;
+  color: #cbd5e1;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    #e2e8f0,
+    transparent
+  );
+}
+
+.divider span {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.form-footer {
+  text-align: center;
+  margin-top: 12px;
+}
+
+.form-footer p {
+  margin: 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.form-footer p a,
+.form-footer .switch-auth-link {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.otp-info {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+}
+
+.otp-info p {
+  font-size: 11px;
+  color: #1e40af;
+  margin: 0;
+}
+
+.back-link {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 10px;
+  font-size: 12px;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 480px) {
+  .form-title {
+    font-size: 22px;
+  }
+
+  .form-header {
+    margin-bottom: 16px;
+  }
+
+  .form-content {
+    gap: 12px;
+  }
+}
