@@ -9,13 +9,14 @@ import Courses from "./pages/dashboard/Courses.jsx";
 import Professions from "./pages/dashboard/Professions.jsx";
 import Setting from "./pages/dashboard/Setting.jsx";
 import ModuleLayout from "./components/layout/module-layout.jsx";
+import AuthContainer from "./components/auth/auth-container.jsx";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         {/* public routes */}
-        <Route path="/" element={<UnderConstruction />} />
+        <Route path="/" element={<AuthContainer />} />
 
         {/* protected routes */}
         <Route element={<ProtectedRoute />}>
