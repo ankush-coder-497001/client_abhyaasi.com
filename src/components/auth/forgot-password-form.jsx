@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import InputField from './input-field';
 import PasswordInputField from './password-input-field';
-import Button from './button';
-import './auth-forms.css';
+import Button from '../ui/button';
+import './styles/auth-forms.css';
 
 
 
