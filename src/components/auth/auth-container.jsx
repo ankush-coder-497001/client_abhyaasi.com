@@ -5,8 +5,8 @@ import LoginForm from './login-form';
 import SignupForm from './signup-form';
 import ForgotPasswordForm from './forgot-password-form';
 import AuthBanner from './auth-banner';
-import './auth-container.css';
-import './global.css';
+import './styles/auth-container.css';
+import './styles/global.css';
 
 
 export default function AuthContainer() {

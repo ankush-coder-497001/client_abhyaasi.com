@@ -1,22 +1,28 @@
-import { Button as AceternityButton } from "../../aceternity-ui/moving-border";
+import './button.css';
 
-function Button({
-  className = "",
-  children = "",
-  borderRadius = "1.75rem",
-  ...otherProps
+
+export default function Button({
+  type,
+  isLoading = false,
+  children,
+  onClick,
 }) {
   return (
-    <div>
-      <AceternityButton
-        borderRadius={borderRadius}
-        className={`cursor-pointer ${className}`}
-        {...otherProps}
-      >
-        {children}
-      </AceternityButton>
-    </div>
+    <button
+      type={type}
+      className="premium-button"
+      disabled={isLoading}
+      onClick={onClick}
+    >
+      {isLoading ? (
+        <span className="button-loader">
+          <span className="loader-dot"></span>
+          <span className="loader-dot"></span>
+          <span className="loader-dot"></span>
+        </span>
+      ) : (
+        children
+      )}
+    </button>
   );
 }
-
-export default Button;

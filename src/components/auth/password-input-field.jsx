@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
-import './password-input-field.css';
+import './styles/password-input-field.css';
 
 export default function PasswordInputField({
   placeholder,

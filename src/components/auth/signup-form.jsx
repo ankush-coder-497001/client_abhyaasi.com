@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import InputField from './input-field';
 import PasswordInputField from './password-input-field';
-import Button from './button';
+import Button from '../ui/button';
 import GoogleButton from './google-button';
-import './auth-forms.css';
+import './styles/auth-forms.css';
 
 
 export default function SignupForm({ onSwitchToLogin }) {

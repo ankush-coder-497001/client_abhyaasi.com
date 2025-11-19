@@ -1,4 +1,4 @@
-import './google-button.css';
+import './styles/google-button.css';
 
 export default function GoogleButton() {
   return (

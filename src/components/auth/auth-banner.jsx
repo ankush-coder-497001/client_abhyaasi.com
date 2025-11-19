@@ -1,6 +1,6 @@
 'use client';
 
-import './auth-banner.css';
+import './styles/auth-banner.css';
 
 
 
