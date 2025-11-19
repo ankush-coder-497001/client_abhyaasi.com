@@ -8,6 +8,7 @@ import Profile from "./pages/dashboard/Profile.jsx";
 import Courses from "./pages/dashboard/Courses.jsx";
 import Professions from "./pages/dashboard/Professions.jsx";
 import Setting from "./pages/dashboard/Setting.jsx";
+import ModuleLayout from "./components/layout/module-layout.jsx";
 
 function App() {
   return (
@@ -25,6 +26,9 @@ function App() {
             <Route path="/professions" element={<Professions />} />
             <Route path="/setting" element={<Setting />} />
           </Route>
+        </Route>
+        <Route element={<ProtectedRoute />}>
+          <Route path="/module" element={<ModuleLayout />} />
         </Route>
         {/* fall back */}
         <Route path="*" element={<Navigate to="/" />} />
