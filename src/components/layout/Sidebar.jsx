@@ -65,7 +65,7 @@ function Sidebar({ children }) {
           </div>
         </SidebarBody>
       </SidebarUI>
-      <div className="overflow-auto lg:p-6  w-full bg-gradient-to-br from-gray-50 to-gray-100 ">
+      <div className="overflow-auto lg:p-6  w-full bg-linear-to-br from-gray-50 to-gray-100 ">
         {children}
       </div>
     </div>

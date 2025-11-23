@@ -116,7 +116,7 @@ function ModuleItem({ module, index, enrolled, expandedModule, setExpandedModule
         <div className="px-6 py-5 flex items-start justify-between gap-4 border border-gray-200 rounded-xl bg-white hover:border-blue-400 hover:shadow-lg transition-all duration-300">
           {/* Module number and title */}
           <div className="flex items-center gap-4 flex-1 min-w-0">
-            <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-blue-600 rounded-lg text-sm font-bold text-white">
+            <div className="shrink-0 w-10 h-10 flex items-center justify-center bg-blue-600 rounded-lg text-sm font-bold text-white">
               {index + 1}
             </div>
             <div className="min-w-0 text-left">
@@ -128,7 +128,7 @@ function ModuleItem({ module, index, enrolled, expandedModule, setExpandedModule
           </div>
 
           {enrolled && (
-            <div className="flex items-center gap-4 flex-shrink-0">
+            <div className="flex items-center gap-4 shrink-0">
               <div className="flex flex-col items-center gap-2">
                 <div className="relative w-24 h-1.5 bg-gray-200 rounded-full overflow-hidden">
                   <div
@@ -155,7 +155,7 @@ function ModuleItem({ module, index, enrolled, expandedModule, setExpandedModule
 
           {/* Chevron */}
           <ChevronDown
-            className={`w-4 h-4 text-gray-400 transition-transform duration-300 flex-shrink-0 ${isModuleExpanded ? "rotate-180" : ""
+            className={`w-4 h-4 text-gray-400 transition-transform duration-300 shrink-0 ${isModuleExpanded ? "rotate-180" : ""
               }`}
           />
         </div>
@@ -216,7 +216,7 @@ export default function CourseDetails() {
             </div>
             <button
               onClick={() => setEnrolled(!enrolled)}
-              className={`flex-shrink-0 px-6 py-2.5 rounded-lg text-xs font-semibold transition-all duration-300 whitespace-nowrap shadow-sm hover:shadow-md ${enrolled ? "bg-black text-white hover:bg-gray-800" : "bg-blue-600 text-white hover:bg-blue-700"
+              className={`shrink-0 px-6 py-2.5 rounded-lg text-xs font-semibold transition-all duration-300 whitespace-nowrap shadow-sm hover:shadow-md ${enrolled ? "bg-black text-white hover:bg-gray-800" : "bg-blue-600 text-white hover:bg-blue-700"
                 }`}
             >
               {enrolled ? "✓ Enrolled" : "Enroll"}
