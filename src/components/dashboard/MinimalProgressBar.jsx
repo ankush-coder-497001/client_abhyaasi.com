@@ -12,7 +12,7 @@ const MinimalProgressBar = () => {
   };
 
   return (
-    <div className="bg-white p-2 rounded-lg shadow-sm border border-gray-200">
+    <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
       {/* Top row with progress and button */}
       <div className="flex items-center justify-between gap-2 mb-1">
         <div className="flex-1">
@@ -21,7 +21,7 @@ const MinimalProgressBar = () => {
             <span className="text-xs text-gray-600">{progressData.progress}%</span>
           </div>
         </div>
-        <button className="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white px-2 py-0.5 rounded text-xs font-semibold transition-colors transform hover:scale-105">
+        <button className="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-xs font-semibold transition-colors transform hover:scale-105">
           <FaPlayCircle size={9} />
           <span>Resume</span>
         </button>

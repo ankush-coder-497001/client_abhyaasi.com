@@ -1,5 +1,6 @@
 .input-wrapper {
   display: flex;
+  align-items: start;
   flex-direction: column;
   gap: 5px;
   margin-bottom: 0;
@@ -50,7 +51,7 @@
   border-radius: 1px;
 }
 
-.input-field:focus ~ .input-focus-line {
+.input-field:focus~.input-focus-line {
   width: 100%;
 }
 

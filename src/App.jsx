@@ -1,15 +1,15 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./styles/premium-dashboard.css";
-import UnderConstruction from "./pages/under-construction/UnderConstruction.jsx";
 import DashboardLayout from "./components/layout/DashboardLayout.jsx";
 import ProtectedRoute from "./utils/ProtectedRoute.jsx";
 import Dashboard from "./pages/dashboard/Dashboard.jsx";
 import Profile from "./pages/dashboard/Profile.jsx";
-import Courses from "./pages/dashboard/Courses.jsx";
+import Courses from "./pages/courses/Courses.jsx";
 import Professions from "./pages/dashboard/Professions.jsx";
 import Setting from "./pages/dashboard/Setting.jsx";
 import ModuleLayout from "./components/layout/module-layout.jsx";
 import AuthContainer from "./components/auth/auth-container.jsx";
+import CourseDetails from "./pages/courses/CourseDetails.jsx";
 
 function App() {
   return (
@@ -17,7 +17,6 @@ function App() {
       <Routes>
         {/* public routes */}
         <Route path="/" element={<AuthContainer />} />
-
         {/* protected routes */}
         <Route element={<ProtectedRoute />}>
           <Route element={<DashboardLayout />}>
@@ -26,10 +25,16 @@ function App() {
             <Route path="/courses" element={<Courses />} />
             <Route path="/professions" element={<Professions />} />
             <Route path="/setting" element={<Setting />} />
+            <Route path="/course-details" element={<CourseDetails />} />
+
           </Route>
         </Route>
         <Route element={<ProtectedRoute />}>
           <Route path="/module" element={<ModuleLayout />} />
+        </Route>
+        {/* course details */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/course-details" element={<CourseDetails />} />
         </Route>
         {/* fall back */}
         <Route path="*" element={<Navigate to="/" />} />

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const ProfileSection = () => {
   // Mock data - replace with actual user data
@@ -66,9 +67,11 @@ const ProfileSection = () => {
       </div>
 
       {/* View Profile Button */}
-      <button className="w-full bg-blue-50 hover:bg-blue-100 text-blue-600 font-semibold py-1 rounded text-xs transition-colors">
-        View Profile
-      </button>
+      <Link to="/profile">
+        <button className="w-full bg-blue-50 hover:bg-blue-100 text-blue-600 font-semibold py-1 rounded text-xs transition-colors">
+          View Profile
+        </button>
+      </Link>
     </div>
   );
 };

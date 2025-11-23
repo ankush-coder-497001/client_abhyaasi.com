@@ -5,6 +5,7 @@ import ProfileSection from "../../components/dashboard/ProfileSection";
 import PremiumCalendar from "../../components/dashboard/PremiumCalendar";
 import LeaderboardCard from "../../components/dashboard/LeaderboardCard";
 import CourseHistory from "../../components/dashboard/CourseHistory";
+import Courses from "../courses/Courses";
 
 const Dashboard = () => {
   return (
@@ -38,6 +39,7 @@ const Dashboard = () => {
         <CourseHistory />
       </div>
     </div>
+
   );
 };
 

@@ -1,7 +1,9 @@
 import React from "react";
 import { FaBook, FaClock, FaUserGraduate } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const LearningCard = ({ data }) => {
+  const navigate = useNavigate();
   const getDifficultyColor = (difficulty) => {
     switch (difficulty) {
       case "easy":
@@ -17,6 +19,7 @@ const LearningCard = ({ data }) => {
   return (
     <div
       className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all overflow-hidden group cursor-pointer border border-gray-100"
+      onClick={() => navigate('/course-details')}
     >
       {/* Thumbnail */}
       <div className="relative h-60 bg-gray-200 overflow-hidden">
