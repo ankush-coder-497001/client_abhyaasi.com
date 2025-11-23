@@ -56,11 +56,11 @@ export default function ModuleLayout() {
       <nav className="fixed top-0 left-0 right-0 border-b border-gray-200 bg-white z-40">
         <div className="flex items-center justify-between h-16 px-4 md:px-6">
           <div className="flex items-center gap-3 flex-1 min-w-0">
-            <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center hover:shadow-lg hover:shadow-blue-600/50 transition-all">
+            <div className="shrink-0 w-8 h-8 bg-linier-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center hover:shadow-lg hover:shadow-blue-600/50 transition-all">
               <span className="text-white font-bold text-xs">L</span>
             </div>
             <div className="min-w-0 h-[100px] flex-1">
-              <h1 className="!text-black md:text-lg font-bold">React Fundamentals</h1>
+              <h1 className="text-black! md:text-lg font-bold">React Fundamentals</h1>
               <p className="text-xs text-gray-500 font-medium">Module 1 of 8 • {activeTitle}</p>
             </div>
           </div>
@@ -96,7 +96,7 @@ export default function ModuleLayout() {
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                     }`}
                 >
-                  <Icon className="w-3.5 h-3.5 flex-shrink-0" />
+                  <Icon className="w-3.5 h-3.5 shrink-0" />
                   <span className="hidden sm:inline">{section.title}</span>
                 </button>
               );
@@ -123,7 +123,7 @@ export default function ModuleLayout() {
       {/* Toggle button */}
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="fixed left-0 top-1/2 -translate-y-1/2 bg-gradient-to-r from-blue-600 to-blue-700 text-white p-1.5 rounded-r-lg hover:from-blue-700 hover:to-blue-800 transition-all z-50 shadow-lg hover:shadow-xl"
+        className="fixed left-0 top-1/2 -translate-y-1/2 bg-linear-to-r from-blue-600 to-blue-700 text-white p-1.5 rounded-r-lg hover:from-blue-700 hover:to-blue-800 transition-all z-50 shadow-lg hover:shadow-xl"
         aria-label="Toggle sidebar"
       >
         {sidebarOpen ? (
