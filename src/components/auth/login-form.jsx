@@ -1,11 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import InputField from './input-field';
 import PasswordInputField from './password-input-field';
 import Button from '../ui/button';
 import GoogleButton from './google-button';
 import './styles/auth-forms.css';
+import { loginUser } from '../../api_services';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 
 
@@ -16,11 +19,23 @@ export default function LoginForm({
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setTimeout(() => setIsLoading(false), 1500);
+    try {
+      const res = await loginUser({ email, password });
+      toast.success(res.message || 'Login successful');
+      localStorage.setItem('abhyaasi_authToken', res.token);
+      navigate("/dashboard");
+    } catch (error) {
+      console.error(error.message || 'Login failed');
+      toast.error(error.message || 'Login failed');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

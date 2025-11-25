@@ -1,4 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { useEffect } from "react";
+import { initializeGoogleSDK } from "./utils/googleOAuth";
 import "./styles/premium-dashboard.css";
 import DashboardLayout from "./components/layout/DashboardLayout.jsx";
 import ProtectedRoute from "./utils/ProtectedRoute.jsx";
@@ -10,10 +12,19 @@ import Setting from "./pages/dashboard/Setting.jsx";
 import ModuleLayout from "./components/layout/module-layout.jsx";
 import AuthContainer from "./components/auth/auth-container.jsx";
 import CourseDetails from "./pages/courses/CourseDetails.jsx";
+import { Toaster } from "react-hot-toast";
 
 function App() {
+  useEffect(() => {
+    // Initialize Google SDK on app load
+    initializeGoogleSDK().catch(err => console.error('Failed to initialize Google SDK:', err));
+  }, []);
+
   return (
     <BrowserRouter>
+
+      <Toaster position="bottom-left" reverseOrder={false} />
+
       <Routes>
         {/* public routes */}
         <Route path="/" element={<AuthContainer />} />
@@ -26,7 +37,6 @@ function App() {
             <Route path="/professions" element={<Professions />} />
             <Route path="/setting" element={<Setting />} />
             <Route path="/course-details" element={<CourseDetails />} />
-
           </Route>
         </Route>
         <Route element={<ProtectedRoute />}>

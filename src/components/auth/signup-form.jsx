@@ -1,4 +1,3 @@
-'use client';
 
 import { useState } from 'react';
 import InputField from './input-field';
@@ -6,6 +5,9 @@ import PasswordInputField from './password-input-field';
 import Button from '../ui/button';
 import GoogleButton from './google-button';
 import './styles/auth-forms.css';
+import { registerUser } from '../../api_services';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function SignupForm({ onSwitchToLogin }) {
@@ -16,6 +18,7 @@ export default function SignupForm({ onSwitchToLogin }) {
     confirmPassword: '',
   });
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate()
 
   const handleChange = (e) => {
     setFormData({
@@ -24,10 +27,20 @@ export default function SignupForm({ onSwitchToLogin }) {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
-    setTimeout(() => setIsLoading(false), 1500);
+    try {
+      setIsLoading(true);
+      const res = await registerUser(formData);
+      toast.success(res.message || 'Registration successful');
+      localStorage.setItem('abhyaasi_authToken', res.token);
+      navigate("/dashboard");
+    } catch (error) {
+      console.error(error.message || 'Registration failed');
+      toast.error(error.message || 'Registration failed');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

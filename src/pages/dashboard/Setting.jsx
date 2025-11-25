@@ -1,12 +1,20 @@
 'use client';
 
 import { useState } from 'react';
-import { Lock, Mail, Trash2, Check, X, Eye, EyeOff } from 'lucide-react';
+import { Lock, Mail, Trash2, Check, X, Eye, EyeOff, LogOut } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import LogoutModal from '../../components/modals/LogoutModal';
 import '../../styles/setting.css';
+import Button from '../../components/ui/button';
+import Loader from '../../components/ui/Loader';
+import { deleteAccount, resetPassword, updateEmail } from '../../api_services';
+import toast from 'react-hot-toast';
 
 const Setting = () => {
+  const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState('password');
   const [showPasswords, setShowPasswords] = useState({});
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [formState, setFormState] = useState({
     currentPassword: '',
     newPassword: '',
@@ -24,7 +32,8 @@ const Setting = () => {
     type: '',
     text: '',
   });
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadingText, setLoadingText] = useState('Loading settings...');
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormState({ ...formState, [name]: value });
@@ -34,59 +43,113 @@ const Setting = () => {
     setShowPasswords({ ...showPasswords, [field]: !showPasswords[field] });
   };
 
-  const handlePasswordReset = (e) => {
+  const handlePasswordReset = async (e) => {
     e.preventDefault();
     if (formState.newPassword !== formState.confirmPassword) {
       setMessage({ type: 'error', text: 'Passwords do not match' });
       return;
     }
-    setMessage({ type: 'success', text: 'Password changed successfully' });
-    setTimeout(() => {
+    setLoadingText('Updating password...');
+    setIsLoading(true);
+    console.log(formState.currentPassword, formState.newPassword);
+    try {
+      await resetPassword({ currentPassword: formState.currentPassword, newPassword: formState.newPassword });
+      setMessage({ type: 'success', text: 'Password updated successfully' });
       setFormState({ ...formState, currentPassword: '', newPassword: '', confirmPassword: '' });
-      setMessage({ type: '', text: '' });
-    }, 2000);
+    } catch (error) {
+      setMessage({ type: 'error', text: error.message || 'Failed to update password' });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleEmailChange = (e) => {
+  const handleEmailChange = async (e) => {
     e.preventDefault();
     if (step.email === 'form') {
-      setStep({ ...step, email: 'otp' });
-      setMessage({ type: 'info', text: 'OTP sent to your current email' });
+      setLoadingText('Sending OTP to new email...');
+      setIsLoading(true);
+      try {
+        const res = await updateEmail(formState.newEmail);
+        setStep({ ...step, email: 'otp' });
+        setMessage({ type: 'info', text: 'OTP sent to your new email' });
+      } catch (error) {
+        setMessage({ type: 'error', text: error.message || 'Failed to send OTP' });
+      } finally {
+        setIsLoading(false);
+      }
     } else if (step.email === 'otp') {
-      if (formState.otp.length === 6) {
-        setMessage({ type: 'success', text: 'Email changed successfully' });
-        setTimeout(() => {
-          setFormState({ ...formState, newEmail: '', otp: '' });
-          setStep({ ...step, email: 'form' });
-          setMessage({ type: '', text: '' });
-        }, 2000);
-      } else {
-        setMessage({ type: 'error', text: 'Invalid OTP' });
+      try {
+        setLoadingText('Verifying OTP...');
+        setIsLoading(true);
+        const res = await updateEmail(formState.newEmail, formState.otp);
+        const { token } = res;
+        localStorage.setItem('abhyaasi_authToken', token);
+        setMessage({ type: 'success', text: 'Email updated successfully' });
+        setFormState({ ...formState, newEmail: '', otp: '' });
+        setStep({ ...step, email: 'form' });
+      } catch (error) {
+        setMessage({ type: 'error', text: error.message || 'Failed to verify OTP' });
+      } finally {
+        setIsLoading(false);
+        setStep({ ...step, email: 'form' });
       }
     }
   };
 
-  const handleDeleteAccount = (e) => {
+  const handleDeleteAccount = async (e) => {
     e.preventDefault();
     if (step.delete === 'form') {
       if (formState.deleteConfirm !== 'DELETE') {
         setMessage({ type: 'error', text: 'Type "DELETE" to confirm' });
         return;
       }
-      setStep({ ...step, delete: 'otp' });
-      setMessage({ type: 'info', text: 'OTP sent to your email' });
+      try {
+        setLoadingText('Sending OTP to your email...');
+        setIsLoading(true);
+        await deleteAccount();
+        setStep({ ...step, delete: 'otp' });
+        setMessage({ type: 'info', text: 'OTP sent to your email' });
+      } catch (error) {
+        setMessage({ type: 'error', text: error.message || 'Failed to initiate account deletion' });
+      } finally {
+        setIsLoading(false);
+      }
     } else if (step.delete === 'otp') {
-      if (formState.otp.length === 6) {
-        setMessage({ type: 'success', text: 'Account deleted successfully' });
-        setTimeout(() => {
-          // Redirect to login or home
-          window.location.href = '/login';
-        }, 2000);
-      } else {
-        setMessage({ type: 'error', text: 'Invalid OTP' });
+      try {
+        setLoadingText('Verifying OTP and deleting account...');
+        setIsLoading(true);
+        await deleteAccount(formState.otp);
+        localStorage.removeItem('abhyaasi_authToken');
+        localStorage.removeItem('abhyaasi_user');
+        navigate('/');
+        toast.success('Account deleted successfully');
+      } catch (error) {
+        setMessage({ type: 'error', text: error.message || 'Failed to delete account' });
+      } finally {
+        setIsLoading(false);
+        setStep({ ...step, delete: 'form' });
       }
     }
   };
+
+  const handleLogout = () => {
+    setShowLogoutModal(true);
+  };
+
+  const confirmLogout = () => {
+    localStorage.removeItem('abhyaasi_authToken');
+    localStorage.removeItem('abhyaasi_user');
+    setShowLogoutModal(false);
+    navigate('/');
+  };
+
+  const cancelLogout = () => {
+    setShowLogoutModal(false);
+  };
+
+  if (isLoading) {
+    return <Loader text={loadingText} />;
+  }
 
   return (
     <div className="settings-container">
@@ -128,6 +191,13 @@ const Setting = () => {
           >
             <Trash2 size={18} />
             <span>Delete Account</span>
+          </button>
+          <button
+            className="nav-item logout"
+            onClick={handleLogout}
+          >
+            <LogOut size={18} />
+            <span>Logout</span>
           </button>
         </nav>
 
@@ -216,7 +286,7 @@ const Setting = () => {
                 </div>
 
                 <button type="submit" className="btn-primary">
-                  <Check size={16} /> Update Password
+                  <Check size={16} /> {isLoading ? 'Updating...' : 'Update Password'}
                 </button>
               </form>
             </div>
@@ -264,7 +334,7 @@ const Setting = () => {
                 )}
 
                 <button type="submit" className="btn-primary">
-                  <Check size={16} /> {step.email === 'form' ? 'Send OTP' : 'Verify & Change Email'}
+                  <Check size={16} /> {isLoading && step.email === 'form' ? 'Sending OTP...' : step.email === 'form' ? 'Send OTP' : 'Verify & Change Email'}
                 </button>
               </form>
             </div>
@@ -328,6 +398,13 @@ const Setting = () => {
           )}
         </div>
       </div>
+
+      <LogoutModal
+        isOpen={showLogoutModal}
+        onConfirm={confirmLogout}
+        onCancel={cancelLogout}
+        useTablerIcon={false}
+      />
     </div>
   );
 };
