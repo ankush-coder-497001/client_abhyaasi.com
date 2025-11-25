@@ -5,6 +5,8 @@ import InputField from './input-field';
 import PasswordInputField from './password-input-field';
 import Button from '../ui/button';
 import './styles/auth-forms.css';
+import { forgotPassword, forgotPasswordSendOTP, forgotPasswordVerifyOTP } from '../../api_services';
+import toast from 'react-hot-toast';
 
 
 
@@ -18,36 +20,47 @@ export default function ForgotPasswordForm({
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleEmailSubmit = (e) => {
+  const handleEmailSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      const res = await forgotPasswordSendOTP(email);
+      toast.success(res.message || 'Verification code sent to your email');
       setStep('otp');
-    }, 1500);
+    } catch (error) {
+      toast.error(error.message || 'Failed to send verification code');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleOtpSubmit = (e) => {
+  const handleOtpSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      const res = await forgotPasswordVerifyOTP(email, otp);
+      toast.success(res.message || 'OTP verified. You can now reset your password.');
       setStep('reset');
-    }, 1500);
+    } catch (error) {
+      toast.error(error.message || 'Failed to verify OTP');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleResetSubmit = (e) => {
+  const handleResetSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      setStep('email');
-      setEmail('');
-      setOtp('');
-      setNewPassword('');
-      setConfirmPassword('');
+    try {
+      const res = await forgotPassword(email, newPassword);
+      toast.success(res.message || 'Password reset successful. You can now log in.');
       onSwitchToLogin();
-    }, 1500);
+    } catch (error) {
+      console.error(error.message || 'Password reset failed');
+      toast.error(error.message || 'Password reset failed');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

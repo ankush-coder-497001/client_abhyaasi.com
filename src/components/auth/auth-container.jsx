@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import LoginForm from './login-form';
 import SignupForm from './signup-form';
 import ForgotPasswordForm from './forgot-password-form';
@@ -8,10 +8,20 @@ import AuthBanner from './auth-banner';
 import GoogleOneTapSignIn from './GoogleOneTapSignIn';
 import './styles/auth-container.css';
 import './styles/global.css';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function AuthContainer() {
   const [mode, setMode] = useState('login');
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const isTokenPresent = localStorage.getItem('abhyaasi_authToken');
+    if (isTokenPresent) {
+      navigate("/dashboard");
+    }
+  }, [])
 
   return (
     <div className="auth-container">

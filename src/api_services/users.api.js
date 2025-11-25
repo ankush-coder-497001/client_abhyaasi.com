@@ -46,6 +46,15 @@ export const registerOrLoginViaGoogle = async (userData) => {
   }
 };
 
+export const forgotPassword = async (email, password) => {
+  try {
+    const response = await axiosInstance.post('/forgot_password', { email, password });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+}
+
 // Password Management
 export const forgotPasswordSendOTP = async (email) => {
   try {
@@ -142,6 +151,25 @@ export const uploadImage = async (formData) => {
         },
       }
     );
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
+
+export const updateEmail = async (email, otp) => {
+  try {
+    const response = await axiosInstance.put('/update_email', { email, otp });
+    return response.data;
+  }
+  catch (error) {
+    throw error.response?.data || error;
+  }
+};
+
+export const deleteAccount = async (otp) => {
+  try {
+    const response = await axiosInstance.post('/delete_user', { otp });
     return response.data;
   } catch (error) {
     throw error.response?.data || error;

@@ -10,11 +10,33 @@ import {
   IconBriefcase,
   IconSettings,
   IconUserBolt,
+  IconLogout,
 } from "@tabler/icons-react";
 import { motion } from "motion/react";
 import { cn } from "../../lib/utils";
+import { useNavigate } from "react-router-dom";
+import LogoutModal from "../modals/LogoutModal";
 
 function Sidebar({ children }) {
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+  const handleLogout = () => {
+    setShowLogoutModal(true);
+  };
+
+  const confirmLogout = () => {
+    localStorage.removeItem('abhyaasi_authToken');
+    localStorage.removeItem('abhyaasi_user');
+    setShowLogoutModal(false);
+    navigate('/');
+  };
+
+  const cancelLogout = () => {
+    setShowLogoutModal(false);
+  };
+
   const links = [
     {
       label: "Dashboard",
@@ -37,7 +59,6 @@ function Sidebar({ children }) {
       icon: <IconBrandDatabricks className="h-5 w-5 shrink-0 text-black" />,
     },
   ];
-  const [open, setOpen] = useState(false);
   return (
     <div
       className={cn(
@@ -54,7 +75,7 @@ function Sidebar({ children }) {
               ))}
             </div>
           </div>
-          <div>
+          <div className="flex flex-col gap-2">
             <SidebarLink
               link={{
                 label: "Setting",
@@ -62,12 +83,26 @@ function Sidebar({ children }) {
                 icon: <IconSettings className="h-5 w-5 shrink-0 text-black" />,
               }}
             />
+            <button
+              onClick={handleLogout}
+              className="flex items-center justify-start space-x-2 rounded-md px-1 py-1 text-sm font-medium text-black hover:bg-gray-200 transition-colors duration-200 w-full cursor-pointer"
+            >
+              <IconLogout className="h-5 w-5 shrink-0 text-black" />
+              <span className="whitespace-pre">{open ? 'Logout' : ''}</span>
+            </button>
           </div>
         </SidebarBody>
       </SidebarUI>
       <div className="overflow-auto lg:p-6  w-full bg-linear-to-br from-gray-50 to-gray-100 ">
         {children}
       </div>
+
+      <LogoutModal
+        isOpen={showLogoutModal}
+        onConfirm={confirmLogout}
+        onCancel={cancelLogout}
+        useTablerIcon={true}
+      />
     </div>
   );
 }
