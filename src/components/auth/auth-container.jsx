@@ -5,6 +5,7 @@ import LoginForm from './login-form';
 import SignupForm from './signup-form';
 import ForgotPasswordForm from './forgot-password-form';
 import AuthBanner from './auth-banner';
+import GoogleOneTapSignIn from './GoogleOneTapSignIn';
 import './styles/auth-container.css';
 import './styles/global.css';
 
@@ -14,6 +15,7 @@ export default function AuthContainer() {
 
   return (
     <div className="auth-container">
+      <GoogleOneTapSignIn />
       <div className={`auth-wrapper auth-${mode}`}>
         {/* Banner side - slides with form */}
         <div className="auth-banner-section">
