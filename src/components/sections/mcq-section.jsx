@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Brain } from 'lucide-react';
 
-const MOCK_MCQS = [
+const DEFAULT_MCQS = [
   {
     id: 1,
     question: 'What is the correct way to pass data from parent to child component in React?',
@@ -28,47 +28,22 @@ const MOCK_MCQS = [
     correctOptionIndex: 1,
     explanation: 'The useEffect hook is designed for handling side effects such as API calls, subscriptions, and DOM manipulation.'
   },
-  {
-    id: 3,
-    question: 'What does the Virtual DOM do?',
-    options: [
-      'Replaces the actual DOM',
-      'Optimizes rendering by batching updates',
-      'Stores user data',
-      'Handles routing'
-    ],
-    correctOptionIndex: 1,
-    explanation: 'The Virtual DOM is an in-memory representation of the actual DOM. React uses it to optimize updates and minimize direct DOM manipulation.'
-  },
-  {
-    id: 4,
-    question: 'Which of the following is NOT a built-in React Hook?',
-    options: [
-      'useState',
-      'useCustom',
-      'useContext',
-      'useReducer'
-    ],
-    correctOptionIndex: 1,
-    explanation: 'useCustom is not a built-in React hook. While you can create custom hooks, useCustom is not a standard hook provided by React.'
-  },
-  {
-    id: 5,
-    question: 'What is the purpose of keys in lists?',
-    options: [
-      'To encrypt data',
-      'To help React identify which items have changed',
-      'To improve styling',
-      'To manage state'
-    ],
-    correctOptionIndex: 1,
-    explanation: 'Keys help React identify which items have changed, been added, or been removed. This helps optimize re-renders in lists.'
-  }
 ];
 
-export default function MCQSection() {
+export default function MCQSection({ moduleData }) {
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
+
+  // Use module MCQs if available, otherwise use defaults
+  // Map server MCQ structure to expected format
+  const mcqs = moduleData?.mcqs?.map((mcq) => ({
+    id: mcq._id,
+    question: mcq.question,
+    options: mcq.options || [],
+    correctOptionIndex: 0, // Note: Server doesn't send correct option index, so we can't validate
+    explanation: mcq.explanation || 'Review the content to understand this better.',
+    maxAttempts: mcq.maxAttempts || 20
+  })) || DEFAULT_MCQS;
 
   const handleSelectOption = (mcqId, index) => {
     if (!submitted) {
@@ -91,7 +66,7 @@ export default function MCQSection() {
   const progress = Object.keys(selectedAnswers).length;
   const correctAnswers = Object.entries(selectedAnswers).filter(
     ([mcqId, answerIndex]) => {
-      const mcq = MOCK_MCQS.find(m => m.id === parseInt(mcqId));
+      const mcq = mcqs.find(m => m.id === parseInt(mcqId));
       return mcq && mcq.correctOptionIndex === answerIndex;
     }
   ).length;
@@ -105,11 +80,11 @@ export default function MCQSection() {
         </div>
         <div className="flex items-center justify-between text-xs">
           <p className="text-gray-600">
-            Answer all <span className="font-semibold">{MOCK_MCQS.length}</span> questions
+            Answer all <span className="font-semibold">{mcqs.length}</span> questions
           </p>
           {submitted && (
             <p className="text-xs font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded-full">
-              Score: {correctAnswers}/{MOCK_MCQS.length}
+              Score: {correctAnswers}/{mcqs.length}
             </p>
           )}
         </div>
@@ -119,18 +94,18 @@ export default function MCQSection() {
       <div className="space-y-0.5">
         <div className="flex justify-between items-center text-xs">
           <span className="text-gray-600 font-medium">Progress</span>
-          <span className="text-gray-500 text-xs">{progress}/{MOCK_MCQS.length}</span>
+          <span className="text-gray-500 text-xs">{progress}/{mcqs.length}</span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-0.5">
           <div
             className="bg-blue-600 h-0.5 rounded-full transition-all duration-300"
-            style={{ width: `${(progress / MOCK_MCQS.length) * 100}%` }}
+            style={{ width: `${(progress / mcqs.length) * 100}%` }}
           ></div>
         </div>
       </div>
 
       <div className="flex-1 overflow-y-auto pr-1.5 space-y-1">
-        {MOCK_MCQS.map((mcq, idx) => {
+        {mcqs.map((mcq, idx) => {
           const selected = selectedAnswers[mcq.id];
           const isCorrect = selected === mcq.correctOptionIndex;
           const isAnswered = selected !== undefined;
@@ -139,7 +114,7 @@ export default function MCQSection() {
             <div key={mcq.id} className="bg-white border border-gray-200 rounded p-1.5 space-y-1 hover:border-blue-300 transition-all">
               {/* Question */}
               <div className="flex items-start gap-1.5">
-                <div className="w-3.5 h-3.5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 text-xs font-bold">
+                <div className="w-3.5 h-3.5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 text-xs font-bold">
                   {idx + 1}
                 </div>
                 <p className="text-xs font-semibold text-gray-900 leading-snug">{mcq.question}</p>
@@ -153,15 +128,15 @@ export default function MCQSection() {
                     onClick={() => handleSelectOption(mcq.id, index)}
                     disabled={submitted}
                     className={`w-full text-left p-1 border rounded transition-all text-xs ${selected === index
-                        ? 'border-blue-400 bg-blue-50 text-gray-900'
-                        : 'border-gray-200 hover:border-blue-400 hover:bg-blue-50 text-gray-700'
+                      ? 'border-blue-400 bg-blue-50 text-gray-900'
+                      : 'border-gray-200 hover:border-blue-400 hover:bg-blue-50 text-gray-700'
                       } ${submitted ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                   >
                     <div className="flex items-center gap-1">
                       <div
-                        className={`w-2.5 h-2.5 rounded-full border-2 flex-shrink-0 transition-all ${selected === index
-                            ? 'border-blue-600 bg-blue-600'
-                            : 'border-gray-300 bg-white'
+                        className={`w-2.5 h-2.5 rounded-full border-2 shrink-0 transition-all ${selected === index
+                          ? 'border-blue-600 bg-blue-600'
+                          : 'border-gray-300 bg-white'
                           }`}
                       >
                         {selected === index && <span className="text-white text-xs flex items-center justify-center">✓</span>}
@@ -185,7 +160,7 @@ export default function MCQSection() {
         })}
       </div>
 
-      <div className="flex gap-1.5 pt-1.5 border-t border-gray-200 flex-shrink-0">
+      <div className="flex gap-1.5 pt-1.5 border-t border-gray-200 shrink-0">
         {submitted && (
           <button
             onClick={handleReset}

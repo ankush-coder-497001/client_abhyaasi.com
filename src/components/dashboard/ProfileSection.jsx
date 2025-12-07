@@ -1,15 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useApp } from "../../context/AppContext";
 
 const ProfileSection = () => {
-  // Mock data - replace with actual user data
-  const user = {
-    name: "Aatosh Kumar",
-    bio: "Full Stack Developer",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Aatosh",
-    streak: 15,
-    totalPoints: 2500,
-    rank: "Gold",
+  const { user } = useApp();
+
+  const userData = {
+    name: user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : user?.name || "User",
+    bio: user?.profile?.bio || "Learning enthusiast",
+    avatar: user?.profile?.profilePicture || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.firstName || 'user'}`,
+    streak: user?.activityHistory.length || 0,
+    totalPoints: user?.points || 0,
+    rank: user?.rank || "Beginner",
   };
 
   return (
@@ -20,16 +22,16 @@ const ProfileSection = () => {
         <div className="relative">
           <div className="w-10 h-10 rounded-full border-2 border-blue-500 shadow-sm overflow-hidden bg-gray-100 flex items-center justify-center">
             <img
-              src={user.avatar}
-              alt={user.name}
+              src={userData.avatar}
+              alt={userData.name}
               className="w-full h-full object-cover"
               onError={(e) => {
                 e.target.style.display = "none";
               }}
             />
-            {!user.avatar && (
+            {!userData.avatar && (
               <div className="text-base font-bold text-blue-500">
-                {user.name[0]}
+                {userData.name[0]}
               </div>
             )}
           </div>
@@ -37,8 +39,8 @@ const ProfileSection = () => {
 
         {/* User Info */}
         <div className="text-center">
-          <h3 className="text-xs font-bold text-gray-900">{user.name}</h3>
-          <p className="text-xs text-gray-600">{user.bio}</p>
+          <h3 className="text-xs font-bold text-gray-900">{userData.name}</h3>
+          <p className="text-xs text-gray-600">{userData.bio}</p>
         </div>
       </div>
 
@@ -47,21 +49,21 @@ const ProfileSection = () => {
         {/* Streak */}
         <div className="text-center p-1 bg-blue-50 rounded">
           <div className="text-sm mb-0.5">🔥</div>
-          <div className="text-xs font-bold text-blue-600">{user.streak}</div>
+          <div className="text-xs font-bold text-blue-600">{userData.streak}</div>
           <div className="text-xs text-gray-600">Days</div>
         </div>
 
         {/* Rank */}
         <div className="text-center p-1 bg-yellow-50 rounded">
           <div className="text-sm mb-0.5">👑</div>
-          <div className="text-xs font-bold text-yellow-600">{user.rank}</div>
+          <div className="text-xs font-bold text-yellow-600">{userData.rank}</div>
           <div className="text-xs text-gray-600">Rank</div>
         </div>
 
         {/* Points */}
         <div className="text-center p-1 bg-green-50 rounded">
           <div className="text-sm mb-0.5">⭐</div>
-          <div className="text-xs font-bold text-green-600">{(user.totalPoints / 100).toFixed(0)}K</div>
+          <div className="text-xs font-bold text-green-600">{(userData.totalPoints / 100).toFixed(0)}K</div>
           <div className="text-xs text-gray-600">Pts</div>
         </div>
       </div>

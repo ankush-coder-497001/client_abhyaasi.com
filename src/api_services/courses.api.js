@@ -47,9 +47,9 @@ export const getCourseBySlug = async (slug) => {
 };
 
 // Enrollment Operations
-export const enrollInCourse = async (courseId) => {
+export const enrollInCourse = async (courseId, permissionFromUser = false) => {
   try {
-    const response = await axiosInstance.post(`/enroll/${courseId}`);
+    const response = await axiosInstance.post(`/enroll/${courseId}`, { permissionFromUser });
     return response.data;
   } catch (error) {
     throw error.response?.data || error;

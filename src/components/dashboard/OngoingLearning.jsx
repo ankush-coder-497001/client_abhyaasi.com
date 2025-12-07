@@ -2,7 +2,6 @@ import React from "react";
 import { FaBookOpen, FaPlayCircle } from "react-icons/fa";
 import { MdCheckCircle } from "react-icons/md";
 import { GiTrophy } from "react-icons/gi";
-import Button from "../ui/Button";
 
 const OngoingLearning = ({ type }) => {
   const course = {
@@ -32,28 +31,27 @@ const OngoingLearning = ({ type }) => {
         <div className="flex items-start sm:items-center justify-between mb-3 flex-wrap gap-2">
           <div className="flex-1">
             <h2 className="text-lg sm:text-xl font-semibold text-gray-800 flex items-center gap-2 flex-wrap">
-              <FaBookOpen className="text-blue-600 flex-shrink-0" />
-              <span className="break-words">{course.title}</span>
+              <FaBookOpen className="text-blue-600 shrink-0" />
+              <span className="wrap-break-words">{course.title}</span>
             </h2>
             <span
               className={`text-xs font-medium px-2 py-0.5 rounded-full mt-1 inline-block
-                ${
-                  type === "course"
-                    ? "bg-blue-100 text-blue-700"
-                    : "bg-green-100 text-green-700"
+                ${type === "course"
+                  ? "bg-blue-100 text-blue-700"
+                  : "bg-green-100 text-green-700"
                 }`}
             >
               {type === "course" ? "Course" : "Profession"}
             </span>
           </div>
-          <span className="flex items-center text-blue-600 text-xs sm:text-sm font-medium whitespace-nowrap flex-shrink-0">
+          <span className="flex items-center text-blue-600 text-xs sm:text-sm font-medium whitespace-nowrap shrink-0">
             <GiTrophy className="mr-1 text-sm sm:text-base" />
             {totalPoints} pts
           </span>
         </div>
 
         {/* Module List with Improved Scrolling */}
-        <div className="space-y-1 mb-3 max-h-56 overflow-y-auto pr-2 custom-scrollbar flex-grow">
+        <div className="space-y-1 mb-3 max-h-56 overflow-y-auto pr-2 custom-scrollbar grow">
           {course.modules.map((module) => {
             const isCompleted = module.id < course.currentModule;
             const isCurrent = module.id === course.currentModule;
@@ -61,36 +59,34 @@ const OngoingLearning = ({ type }) => {
             return (
               <div
                 key={module.id}
-                className={`flex items-center px-2 py-1 justify-between rounded-md border transition-all text-sm ${
-                  isCompleted
+                className={`flex items-center px-2 py-1 justify-between rounded-md border transition-all text-sm ${isCompleted
                     ? "bg-green-50 border-green-200"
                     : isCurrent
-                    ? "bg-blue-50 border-blue-200"
-                    : "bg-gray-50 border-gray-200 opacity-70"
-                }`}
+                      ? "bg-blue-50 border-blue-200"
+                      : "bg-gray-50 border-gray-200 opacity-70"
+                  }`}
               >
                 <div className="flex items-center gap-2 min-w-0 flex-1">
                   {isCompleted ? (
-                    <MdCheckCircle className="text-green-500 text-base flex-shrink-0" />
+                    <MdCheckCircle className="text-green-500 text-base shrink-0" />
                   ) : isCurrent ? (
-                    <FaPlayCircle className="text-blue-500 text-base animate-pulse flex-shrink-0" />
+                    <FaPlayCircle className="text-blue-500 text-base animate-pulse shrink-0" />
                   ) : (
-                    <FaBookOpen className="text-gray-400 text-base flex-shrink-0" />
+                    <FaBookOpen className="text-gray-400 text-base shrink-0" />
                   )}
                   <span
-                    className={`font-medium truncate ${
-                      isCompleted
+                    className={`font-medium truncate ${isCompleted
                         ? "text-green-700"
                         : isCurrent
-                        ? "text-blue-700"
-                        : "text-gray-500"
-                    }`}
+                          ? "text-blue-700"
+                          : "text-gray-500"
+                      }`}
                     title={module.name}
                   >
                     {module.name}
                   </span>
                 </div>
-                <span className="text-xs sm:text-sm font-semibold text-gray-600 ml-1 flex-shrink-0">
+                <span className="text-xs sm:text-sm font-semibold text-gray-600 ml-1 shrink-0">
                   +{module.points}
                 </span>
               </div>
@@ -108,15 +104,15 @@ const OngoingLearning = ({ type }) => {
           </div>
           <div className="w-full bg-gray-200 h-2 sm:h-3 rounded-full overflow-hidden">
             <div
-              className="h-2 sm:h-3 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 transition-all"
+              className="h-2 sm:h-3 rounded-full bg-linear-to-r from-blue-500 to-indigo-600 transition-all"
               style={{ width: `${progress}%` }}
             ></div>
           </div>
         </div>
       </div>
 
-       <button className="relative z-10 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition mt-2 cursor-pointer text-sm sm:text-base">
-        <FaPlayCircle className="text-base flex-shrink-0" />
+      <button className="relative z-10 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition mt-2 cursor-pointer text-sm sm:text-base">
+        <FaPlayCircle className="text-base shrink-0" />
         <span>Resume</span>
       </button>
     </div>

@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Code2, Play, Copy, Check } from 'lucide-react';
 
-const MOCK_PROBLEM = {
+const DEFAULT_PROBLEM = {
   title: 'Build a Counter Component',
   difficulty: 'Easy',
   description: 'Create a React component that displays a counter with increment and decrement buttons.',
@@ -56,8 +56,26 @@ export default function Counter() {
 }`
 };
 
-export default function CodingSection() {
-  const [code, setCode] = useState(MOCK_PROBLEM.templateCode);
+export default function CodingSection({ moduleData }) {
+  // Get template code from server's templateFiles array
+  const templateFile = moduleData?.codingTask?.templateFiles?.find(file => file.path.includes("main"));
+  const templateCode = templateFile ? templateFile.content : DEFAULT_PROBLEM.templateCode;
+  // Map server coding task structure to expected format
+  const problem = moduleData?.codingTask ? {
+    title: moduleData.codingTask.title || 'Coding Challenge',
+    difficulty: moduleData.codingTask.difficulty || 'Medium',
+    description: moduleData.codingTask.description || 'Complete the coding challenge',
+    examples: [
+      {
+        input: 'Run the test cases below',
+        output: 'Your code should pass all tests'
+      }
+    ],
+    testcases: moduleData.codingTask.testcases || DEFAULT_PROBLEM.testcases,
+    templateCode: templateCode
+  } : DEFAULT_PROBLEM;
+
+  const [code, setCode] = useState(problem.templateCode);
   const [copied, setCopied] = useState(false);
   const [testResults, setTestResults] = useState(null);
   const [dividerPos, setDividerPos] = useState(50);
@@ -120,11 +138,11 @@ export default function CodingSection() {
           {/* Header */}
           <div className="flex items-start justify-between gap-2">
             <div className="flex items-start gap-1.5 flex-1 min-w-0">
-              <Code2 className="w-3.5 h-3.5 text-blue-600 flex-shrink-0 mt-0.5" />
+              <Code2 className="w-3.5 h-3.5 text-blue-600 shrink-0 mt-0.5" />
               <div>
-                <h2 className="text-xs font-bold text-black line-clamp-2">{MOCK_PROBLEM.title}</h2>
+                <h2 className="text-xs font-bold text-black line-clamp-2">{problem.title}</h2>
                 <span className="inline-block px-1 py-0.5 bg-blue-100 text-blue-700 text-xs font-semibold rounded mt-0.5">
-                  {MOCK_PROBLEM.difficulty}
+                  {problem.difficulty}
                 </span>
               </div>
             </div>
@@ -133,14 +151,14 @@ export default function CodingSection() {
           {/* Description */}
           <div className="pt-1">
             <h3 className="text-xs font-bold text-gray-700 mb-0.5 uppercase tracking-wider">Description</h3>
-            <p className="text-gray-600 text-xs leading-relaxed">{MOCK_PROBLEM.description}</p>
+            <p className="text-gray-600 text-xs leading-relaxed">{problem.description}</p>
           </div>
 
           {/* Examples */}
           <div className="pt-1 border-t border-gray-200">
             <h3 className="text-xs font-bold text-gray-700 mb-0.5 uppercase tracking-wider">Examples</h3>
             <div className="space-y-0.5">
-              {MOCK_PROBLEM.examples.map((example, idx) => (
+              {problem.examples.map((example, idx) => (
                 <div key={idx} className="bg-gray-50 rounded p-1 text-xs border border-gray-200">
                   <p className="text-gray-700"><span className="font-semibold text-xs">Input:</span> {example.input}</p>
                   <p className="text-gray-700 mt-0.5"><span className="font-semibold text-xs">Output:</span> {example.output}</p>
@@ -153,7 +171,7 @@ export default function CodingSection() {
           <div className="pt-1 border-t border-gray-200">
             <h3 className="text-xs font-bold text-gray-700 mb-0.5 uppercase tracking-wider">Test Cases</h3>
             <div className="space-y-0.5">
-              {MOCK_PROBLEM.testcases.map((test) => (
+              {problem.testcases.map((test) => (
                 <div key={test.id} className="bg-gray-50 rounded p-1 text-xs border border-gray-200">
                   <p className="text-gray-700"><span className="font-semibold text-xs">Test #{test.id}:</span> {test.input}</p>
                 </div>
@@ -214,7 +232,7 @@ export default function CodingSection() {
             <div className="space-y-0.5">
               {testResults.details.map((detail) => (
                 <div key={detail.id} className="text-xs flex items-center gap-1.5 text-gray-700">
-                  <div className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-blue-600"></div>
+                  <div className="w-1.5 h-1.5 rounded-full shrink-0 bg-blue-600"></div>
                   <span>{detail.message}</span>
                 </div>
               ))}

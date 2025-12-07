@@ -1,116 +1,28 @@
 "use client"
 
 import { useState } from "react"
-import { ChevronDown, ArrowLeft, Play } from "lucide-react"
-import { Link } from "react-router-dom"
-
-const mockCourseData = {
-  id: 1,
-  title: "React Fundamentals Mastery",
-  description: "Master React from basics to advanced concepts with real-world projects and hands-on coding challenges.",
-  rating: 4.8,
-  students: 12500,
-  duration: "48 hours",
-  level: "Intermediate",
-  enrolled: true,
-  progress: 33,
-  modules: [
-    {
-      id: 1,
-      title: "React Basics",
-      order: 1,
-      duration: "6 hours",
-      lessons: 12,
-      progress: 100,
-      description: "Learn the fundamentals of React including components, JSX syntax, props, and state management.",
-      topics: [
-        { name: "Introduction to React", duration: "45 min" },
-        { name: "Components & JSX", duration: "1h 20min" },
-        { name: "Props & State", duration: "1h 15min" },
-        { name: "Event Handling", duration: "1h 10min" },
-      ],
-    },
-    {
-      id: 2,
-      title: "Hooks & State Management",
-      order: 2,
-      duration: "8 hours",
-      lessons: 16,
-      progress: 60,
-      description: "Master React Hooks including useState, useEffect, and custom hooks for better state management.",
-      topics: [
-        { name: "useState Hook", duration: "1h 10min" },
-        { name: "useEffect Hook", duration: "1h 30min" },
-        { name: "Custom Hooks", duration: "1h 45min" },
-        { name: "Context API", duration: "1h 20min" },
-      ],
-    },
-    {
-      id: 3,
-      title: "Advanced React Patterns",
-      order: 3,
-      duration: "7 hours",
-      lessons: 14,
-      progress: 0,
-      description:
-        "Explore advanced patterns like Higher Order Components, Render Props, and performance optimization.",
-      topics: [
-        { name: "Higher Order Components", duration: "1h 15min" },
-        { name: "Render Props", duration: "1h 10min" },
-        { name: "Performance Optimization", duration: "1h 25min" },
-        { name: "Lazy Loading", duration: "55min" },
-      ],
-    },
-    {
-      id: 4,
-      title: "Building Real Projects",
-      order: 4,
-      duration: "10 hours",
-      lessons: 20,
-      progress: 0,
-      description: "Build production-ready applications with proper architecture, API integration, and deployment.",
-      topics: [
-        { name: "Project Setup", duration: "45 min" },
-        { name: "Component Architecture", duration: "2h 10min" },
-        { name: "API Integration", duration: "1h 55min" },
-        { name: "Deployment", duration: "1h 20min" },
-      ],
-    },
-    {
-      id: 5,
-      title: "Interview Preparation",
-      order: 5,
-      duration: "9 hours",
-      lessons: 18,
-      progress: 0,
-      description: "Prepare for React interviews with common questions, coding challenges, and system design.",
-      topics: [
-        { name: "Common Questions", duration: "2h 15min" },
-        { name: "Coding Challenges", duration: "2h 30min" },
-        { name: "System Design", duration: "2h 10min" },
-        { name: "Mock Interviews", duration: "1h 45min" },
-      ],
-    },
-  ],
-}
+import { ChevronDown, ArrowLeft, Play, Loader, X } from "lucide-react"
+import { useParams, Link } from "react-router-dom"
+import toast from "react-hot-toast"
+import { useApp } from "../../context/AppContext"
 
 function ModuleItem({ module, index, enrolled, expandedModule, setExpandedModule, moduleProgress, setModuleProgress }) {
   const handleResumeClick = (e) => {
     e.stopPropagation()
-    if (moduleProgress[module.id] === undefined) {
-      setModuleProgress({ ...moduleProgress, [module.id]: 5 })
+    if (moduleProgress[module._id] === undefined) {
+      setModuleProgress({ ...moduleProgress, [module._id]: 5 })
     } else {
-      setModuleProgress({ ...moduleProgress, [module.id]: Math.min(moduleProgress[module.id] + 10, 100) })
+      setModuleProgress({ ...moduleProgress, [module._id]: Math.min(moduleProgress[module._id] + 10, 100) })
     }
   }
 
-  const currentProgress = moduleProgress[module.id] || module.progress || 0
-  const isModuleExpanded = expandedModule === module.id
+  const currentProgress = moduleProgress[module._id] || module.progress || 0
+  const isModuleExpanded = expandedModule === module._id
 
   return (
-    <div key={module.id} className="group">
+    <div key={module._id} className="group">
       <button
-        onClick={() => setExpandedModule(isModuleExpanded ? null : module.id)}
+        onClick={() => setExpandedModule(isModuleExpanded ? null : module._id)}
         className="w-full transition-all duration-300"
       >
         <div className="px-6 py-5 flex items-start justify-between gap-4 border border-gray-200 rounded-xl bg-white hover:border-blue-400 hover:shadow-lg transition-all duration-300">
@@ -122,7 +34,7 @@ function ModuleItem({ module, index, enrolled, expandedModule, setExpandedModule
             <div className="min-w-0 text-left">
               <h3 className="text-base font-semibold text-black truncate">{module.title}</h3>
               <p className="text-xs text-gray-500 mt-1.5">
-                {module.duration} • {module.lessons} lessons
+                {module.duration || "1 Day"} • {4 || 0} lessons
               </p>
             </div>
           </div>
@@ -161,7 +73,7 @@ function ModuleItem({ module, index, enrolled, expandedModule, setExpandedModule
         </div>
       </button>
 
-      {isModuleExpanded && (
+      {isModuleExpanded && module.topics && (
         <div className="border border-t-0 border-gray-200 rounded-b-xl bg-gray-50 px-6 py-4 space-y-3 animate-in fade-in duration-300">
           <div className="space-y-2">
             {module.topics.map((topic, idx) => (
@@ -171,9 +83,9 @@ function ModuleItem({ module, index, enrolled, expandedModule, setExpandedModule
               >
                 <div className="flex items-center gap-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-blue-600" />
-                  <p className="text-gray-700 font-medium">{topic.name}</p>
+                  <p className="text-gray-700 font-medium">{typeof topic === 'string' ? topic : topic.title || 'Topic'}</p>
                 </div>
-                <p className="text-gray-500 font-medium">{topic.duration}</p>
+                <p className="text-gray-500 font-medium">{topic.duration || ''}</p>
               </div>
             ))}
           </div>
@@ -184,26 +96,100 @@ function ModuleItem({ module, index, enrolled, expandedModule, setExpandedModule
 }
 
 export default function CourseDetails() {
+  const { courseId } = useParams()
+  const { courses, enrollmentLoading, isCoursEnrolled, enrollCourse, unenrollCourse } = useApp()
   const [expandedModule, setExpandedModule] = useState(null)
-  const [enrolled, setEnrolled] = useState(true)
   const [moduleProgress, setModuleProgress] = useState({})
+  const [showUnenrollModal, setShowUnenrollModal] = useState(false)
 
-  const overallProgress = Math.round(
-    mockCourseData.modules.reduce((sum, m) => sum + (moduleProgress[m.id] || m.progress || 0), 0) /
-    mockCourseData.modules.length,
-  )
+  // Get course from context
+  const course = courses.find(c => c._id === courseId)
+  const enrolled = course ? isCoursEnrolled(courseId) : false
+
+  console.log('Course Details - course:', course)
+
+  const handleEnroll = async (e) => {
+    e?.stopPropagation()
+    try {
+      if (enrolled) {
+        setShowUnenrollModal(true)
+      } else {
+        await enrollCourse(courseId)
+        toast.success('Successfully enrolled in course')
+      }
+    } catch (error) {
+      console.error('Error during enrollment action:', error)
+      toast.error(error.message || 'Failed to update enrollment')
+    }
+  }
+
+  const handleConfirmUnenroll = async () => {
+    try {
+      setShowUnenrollModal(false)
+      await unenrollCourse(courseId)
+      toast.success('Successfully unenrolled from course')
+    } catch (error) {
+      console.error('Error unenrolling from course:', error)
+      toast.error(error.message || 'Failed to unenroll')
+    }
+  }
+
+  const overallProgress = course?.modules
+    ? Math.round(
+      course.modules.reduce((sum, m) => sum + (moduleProgress[m._id] || m.progress || 0), 0) /
+      course.modules.length,
+    )
+    : 0
+
+  if (!course) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Course not found</h2>
+          <Link to="/courses" className="text-blue-600 hover:underline">
+            Back to courses
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
+  // if (loading) {
+  //   return (
+  //     <div className="min-h-screen bg-white flex items-center justify-center">
+  //       <div className="flex flex-col items-center gap-4">
+  //         <Loader size={40} className="animate-spin text-blue-600" />
+  //         <p className="text-gray-600 text-lg">Loading course details...</p>
+  //       </div>
+  //     </div>
+  //   )
+  // }
+
+  if (!course) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Course not found</h2>
+          <Link to="/courses" className="text-blue-600 hover:underline">
+            Back to courses
+          </Link>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-white text-gray-900">
       <div className="border-b border-gray-200 bg-white sticky top-0 z-30">
         <div className="max-w-4xl mx-auto px-6 py-4">
-
-          <h1 className="text-2xl font-bold text-black tracking-tight">{mockCourseData.title}</h1>
+          <h1 className="text-2xl font-bold text-black tracking-tight">{course.title}</h1>
         </div>
 
-        <div className="w-full h-0.5 bg-gray-200">
-          <div className="h-full bg-blue-600 transition-all duration-500" style={{ width: `${overallProgress}%` }} />
-        </div>
+        {enrolled && (
+          <div className="w-full h-0.5 bg-gray-200">
+            <div className="h-full bg-blue-600 transition-all duration-500" style={{ width: `${overallProgress}%` }} />
+          </div>
+        )}
       </div>
 
       {/* Main content */}
@@ -212,14 +198,29 @@ export default function CourseDetails() {
           <div className="flex items-start justify-between gap-8 mb-6">
             <div className="flex-1">
               <p className="text-xs text-gray-500 font-semibold uppercase tracking-widest mb-3">About Course</p>
-              <p className="text-sm text-gray-700 leading-relaxed">{mockCourseData.description}</p>
+              <p className="text-sm text-gray-700 leading-relaxed">{course.description}</p>
+              <p className="text-xs text-gray-500 mt-4">
+                <span className="font-semibold">Difficulty:</span> {course.difficulty || 'N/A'} •
+                <span className="font-semibold ml-3">Duration:</span> {course.duration || 'N/A'} •
+                <span className="font-semibold ml-3">Students:</span> {course.enrolledStudents || 0}
+              </p>
             </div>
             <button
-              onClick={() => setEnrolled(!enrolled)}
-              className={`shrink-0 px-6 py-2.5 rounded-lg text-xs font-semibold transition-all duration-300 whitespace-nowrap shadow-sm hover:shadow-md ${enrolled ? "bg-black text-white hover:bg-gray-800" : "bg-blue-600 text-white hover:bg-blue-700"
+              onClick={handleEnroll}
+              disabled={enrollmentLoading}
+              className={`shrink-0 px-6 py-2.5 rounded-lg text-xs font-semibold transition-all duration-300 whitespace-nowrap shadow-sm hover:shadow-md disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2 ${enrolled ? "bg-black text-white hover:bg-gray-800" : "bg-blue-600 text-white hover:bg-blue-700"
                 }`}
             >
-              {enrolled ? "✓ Enrolled" : "Enroll"}
+              {enrollmentLoading ? (
+                <>
+                  <Loader size={14} className="animate-spin" />
+                  {enrolled ? "Unenrolling..." : "Enrolling..."}
+                </>
+              ) : (
+                <>
+                  {enrolled ? "✓ Enrolled" : "Enroll"}
+                </>
+              )}
             </button>
           </div>
 
@@ -244,22 +245,69 @@ export default function CourseDetails() {
         </div>
 
         {/* Modules section */}
-        <div className="space-y-3">
-          <p className="text-xs font-semibold text-gray-600 uppercase tracking-widest mb-4">Modules</p>
-          {mockCourseData.modules.map((module, idx) => (
-            <ModuleItem
-              key={module.id}
-              module={module}
-              index={idx}
-              enrolled={enrolled}
-              expandedModule={expandedModule}
-              setExpandedModule={setExpandedModule}
-              moduleProgress={moduleProgress}
-              setModuleProgress={setModuleProgress}
-            />
-          ))}
-        </div>
+        {course.modules && course.modules.length > 0 && (
+          <div className="space-y-3">
+            <p className="text-xs font-semibold text-gray-600 uppercase tracking-widest mb-4">Modules</p>
+            {course.modules.map((module, idx) => (
+              <ModuleItem
+                key={module._id}
+                module={module}
+                index={idx}
+                enrolled={enrolled}
+                expandedModule={expandedModule}
+                setExpandedModule={setExpandedModule}
+                moduleProgress={moduleProgress}
+                setModuleProgress={setModuleProgress}
+              />
+            ))}
+          </div>
+        )}
       </div>
+
+      {/* Unenroll Confirmation Modal */}
+      {showUnenrollModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full mx-4">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-800">Unenroll from Course</h3>
+              <button
+                onClick={() => setShowUnenrollModal(false)}
+                className="text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to unenroll from <strong>{course.title}</strong>? Your progress will be saved, but you'll lose access to course content.
+            </p>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowUnenrollModal(false)}
+                disabled={enrollmentLoading}
+                className="flex-1 px-4 py-2 rounded-lg bg-gray-200 text-gray-800 hover:bg-gray-300 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmUnenroll}
+                disabled={enrollmentLoading}
+                className="flex-1 px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 font-medium transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {enrollmentLoading ? (
+                  <>
+                    <Loader size={14} className="animate-spin" />
+                    <span>Unenrolling...</span>
+                  </>
+                ) : (
+                  "Unenroll"
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
