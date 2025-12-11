@@ -43,6 +43,7 @@ export const submitMCQ = async (moduleId, submissionData) => {
     const response = await axiosInstance.post(`/submit-mcq/${moduleId}`, submissionData);
     return response.data;
   } catch (error) {
+    console.log("Error in submitMCQ:", error);
     throw error.response?.data || error;
   }
 };

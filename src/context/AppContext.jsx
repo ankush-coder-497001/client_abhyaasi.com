@@ -19,23 +19,13 @@ export const AppProvider = ({ children }) => {
 
   // Track user activity on app load if token exists
   useEffect(() => {
-    const token = localStorage.getItem('abhyaasi_authToken');
-    const isTracked = sessionStorage.getItem('abhyaasi_trackactivity') === 'true';
-
-
-
-    if (token && !isTracked) {
-      // Track activity immediately when token exists
-      trackActivity().catch((error) => {
-        console.error('Failed to track activity:', error);
-      });
-
-      sessionStorage.setItem('abhyaasi_trackactivity', 'true');
-
-    }
+    // Track activity immediately when token exists
+    trackActivity().catch((error) => {
+      console.error('Failed to track activity:', error);
+    });
   }, []);
 
-  // Fetch user data
+  // Fetch user data with frequent refetch
   const { data: userData, isLoading: userLoading, error: userError, refetch: refetchUser } = useQuery({
     queryKey: ['user'],
     queryFn: async () => {
@@ -48,9 +38,11 @@ export const AppProvider = ({ children }) => {
         throw error;
       }
     },
-    staleTime: 1000 * 60 * 5, // 5 minutes
-    gcTime: 1000 * 60 * 10, // 10 minutes
+    staleTime: 1000 * 30, // 30 seconds - frequent updates for real-time module tracking
+    gcTime: 1000 * 60, // 1 minute garbage collection
     retry: 3,
+    refetchInterval: 1000 * 60, // Refetch every 60 seconds for state updates
+    refetchIntervalInBackground: true, // Refetch even when tab is in background
   });
 
   // Fetch all courses
@@ -91,10 +83,9 @@ export const AppProvider = ({ children }) => {
     retry: 3,
   });
 
-  console.log("AppContext - userData:", userData);
 
   // Extract enrolled course and profession IDs from user data
-  const enrolledCourseId = userData?.currentCourse;
+  const enrolledCourseId = userData?.currentCourse?._id;
   const enrolledProfessionIds = userData?.enrolledProfessions || [];
 
 
@@ -170,6 +161,18 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  const getUserCompletedCourses = () => {
+    const completedCourseIds = userData?.completedCourses || [];
+    const userCompletedCourses = coursesData?.filter(course => completedCourseIds.includes(course._id)) || [];
+    return userCompletedCourses;
+  }
+
+  const getUserCompletedProfessions = () => {
+    const completedProfessionIds = userData?.completedProfessions || [];
+    const userCompletedProfessions = professionsData?.filter(profession => completedProfessionIds.includes(profession._id)) || [];
+    return userCompletedProfessions;
+  }
+
   // Create context value
   const contextValue = {
     // User data
@@ -201,6 +204,10 @@ export const AppProvider = ({ children }) => {
     enrollProfession,
     unenrollProfession,
     enrollmentLoading,
+
+    // User completed courses and professions
+    getUserCompletedCourses,
+    getUserCompletedProfessions,
 
     // Helper methods
     isCoursEnrolled: (courseId) => enrolledCourseId === courseId,

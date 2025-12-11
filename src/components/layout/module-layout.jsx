@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, BookOpen, Brain, Code2, Briefcase, Loader } from 'lucide-react';
+import { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ChevronLeft, ChevronRight, BookOpen, Brain, Code2, Briefcase, Loader, CheckCircle } from 'lucide-react';
 import { getModule } from '../../api_services/modules.api';
+import { useApp } from '../../context/AppContext';
 import TheorySection from '../sections/theory-section';
 import MCQSection from '../sections/mcq-section';
 import CodingSection from '../sections/coding-section';
@@ -25,7 +26,12 @@ const USER_MESSAGES = [
 ];
 
 export default function ModuleLayout() {
-  const { moduleId } = useParams();
+  const navigate = useNavigate();
+  const { user, userLoading } = useApp();
+
+  // Get moduleId from user's currentModule
+  const moduleId = user?.currentModule._id;
+
   const [activeSection, setActiveSection] = useState('theory');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [messageIndex, setMessageIndex] = useState(0);
@@ -33,23 +39,31 @@ export default function ModuleLayout() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch module data
-  useEffect(() => {
-    const fetchModule = async () => {
-      if (!moduleId) return;
-      try {
-        setLoading(true);
-        const data = await getModule(moduleId);
-        setModuleData(data.data);
-        setError(null);
-      } catch (err) {
-        console.error('Error fetching module:', err);
-        setError('Failed to load module');
-      } finally {
-        setLoading(false);
-      }
-    };
 
+  // Redirect to dashboard if no current module
+  useEffect(() => {
+    if (!userLoading && !moduleId) {
+      navigate('/dashboard');
+    }
+  }, [moduleId, userLoading, navigate]);
+
+  // Fetch module data
+  const fetchModule = async () => {
+    if (!moduleId) return;
+    try {
+      setLoading(true);
+      const data = await getModule(moduleId);
+      setModuleData(data.data);
+      setError(null);
+    } catch (err) {
+      console.error('Error fetching module:', err);
+      setError('Failed to load module');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchModule();
   }, [moduleId]);
 
@@ -66,9 +80,9 @@ export default function ModuleLayout() {
       case 'theory':
         return <TheorySection moduleData={moduleData} />;
       case 'mcq':
-        return <MCQSection moduleData={moduleData} />;
+        return <MCQSection moduleData={moduleData} moduleId={moduleId} onSuccess={fetchModule} />;
       case 'coding':
-        return <CodingSection moduleData={moduleData} />;
+        return <CodingSection moduleData={moduleData} moduleId={moduleId} onSuccess={fetchModule} />;
       case 'interview':
         return <InterviewSection moduleData={moduleData} />;
       default:
@@ -141,6 +155,15 @@ export default function ModuleLayout() {
               <nav className="flex-1 overflow-y-auto px-2 py-2 space-y-1">
                 {SECTIONS.map((section) => {
                   const Icon = section.icon;
+
+                  // Check if section is completed based on moduleData
+                  let isCompleted = false;
+                  if (section.id === 'mcq') {
+                    isCompleted = moduleData?.isMcqCompleted || false;
+                  } else if (section.id === 'coding') {
+                    isCompleted = moduleData?.isCodingCompleted || false;
+                  }
+
                   return (
                     <button
                       key={section.id}
@@ -151,7 +174,10 @@ export default function ModuleLayout() {
                         }`}
                     >
                       <Icon className="w-3.5 h-3.5 shrink-0" />
-                      <span className="hidden sm:inline">{section.title}</span>
+                      <span className="hidden sm:inline flex-1 text-left">{section.title}</span>
+                      {isCompleted && (
+                        <CheckCircle className={`w-3.5 h-3.5 shrink-0 ${activeSection === section.id ? 'text-white' : 'text-green-600'}`} />
+                      )}
                     </button>
                   );
                 })}

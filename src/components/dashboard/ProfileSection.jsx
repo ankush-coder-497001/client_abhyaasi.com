@@ -14,6 +14,7 @@ const ProfileSection = () => {
     rank: user?.rank || "Beginner",
   };
 
+
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-2.5 h-full flex flex-col">
       {/* Profile Header */}
@@ -49,7 +50,7 @@ const ProfileSection = () => {
         {/* Streak */}
         <div className="text-center p-1 bg-blue-50 rounded">
           <div className="text-sm mb-0.5">🔥</div>
-          <div className="text-xs font-bold text-blue-600">{userData.streak}</div>
+          <div className="text-xs font-bold text-blue-600">{Math.abs(userData.streak)}</div>
           <div className="text-xs text-gray-600">Days</div>
         </div>
 
@@ -63,7 +64,7 @@ const ProfileSection = () => {
         {/* Points */}
         <div className="text-center p-1 bg-green-50 rounded">
           <div className="text-sm mb-0.5">⭐</div>
-          <div className="text-xs font-bold text-green-600">{(userData.totalPoints / 100).toFixed(0)}K</div>
+          <div className="text-xs font-bold text-green-600">{userData.totalPoints}</div>
           <div className="text-xs text-gray-600">Pts</div>
         </div>
       </div>

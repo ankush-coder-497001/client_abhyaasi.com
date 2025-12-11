@@ -10,6 +10,7 @@ import Profile from "./pages/dashboard/Profile.jsx";
 import Courses from "./pages/courses/Courses.jsx";
 import Professions from "./pages/professions/Professions.jsx";
 import Setting from "./pages/dashboard/Setting.jsx";
+import Learning from "./pages/dashboard/Learning.jsx";
 import ModuleLayout from "./components/layout/module-layout.jsx";
 import AuthContainer from "./components/auth/auth-container.jsx";
 import TokenExpired from "./pages/auth/TokenExpired.jsx";
@@ -37,6 +38,7 @@ function App() {
             <Route element={<DashboardLayout />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/learning" element={<Learning />} />
               <Route path="/courses" element={<Courses />} />
               <Route path="/professions" element={<Professions />} />
               <Route path="/setting" element={<Setting />} />
@@ -45,6 +47,7 @@ function App() {
             </Route>
           </Route>
           <Route element={<ProtectedRoute />}>
+            <Route path="/module" element={<ModuleLayout />} />
             <Route path="/module/:moduleId" element={<ModuleLayout />} />
           </Route>
           {/* course details */}

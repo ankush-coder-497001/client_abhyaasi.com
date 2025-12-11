@@ -5,9 +5,10 @@ import toast from 'react-hot-toast';
 import '../../styles/profile.css';
 import { addOrUpdateProfile, uploadImage } from '../../api_services/users.api';
 import { useApp } from '../../context/AppContext';
+import MinimalProgressBar from '../../components/dashboard/MinimalProgressBar';
 
 const Profile = () => {
-  const { user, userLoading, refetchUser } = useApp();
+  const { user, userLoading, refetchUser, getUserCompletedCourses, getUserCompletedProfessions } = useApp();
   const [saveLoading, setSaveLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({});
@@ -283,6 +284,13 @@ const Profile = () => {
           </div>
         </div>
 
+        {/* Learning Progress */}
+        {user.currentCourse && (
+          <div className="section">
+            <MinimalProgressBar />
+          </div>
+        )}
+
         {/* Badges - Minimal */}
         {user.badges && user.badges.length > 0 && (
           <div className="section">
@@ -320,14 +328,12 @@ const Profile = () => {
 
           {activeTab === 'courses' && (
             <div className="items-grid">
-              {user.completedCourses && user.completedCourses.length > 0 ? (
-                user.completedCourses.map((course) => (
+              {getUserCompletedCourses() && getUserCompletedCourses().length > 0 ? (
+                getUserCompletedCourses().map((course) => (
                   <div key={course._id || course.id} className="item">
                     <div className="item-header">
                       <h3 className="item-title">{course.title}</h3>
-                      <span className={`badge-status ${course.progress === 100 ? 'done' : 'progress'}`}>
-                        {course.progress === 100 ? 'Done' : `${course.progress}%`}
-                      </span>
+
                     </div>
                     <div className="progress">
                       <div className="bar" style={{ width: `${course.progress || 0}%` }}></div>
@@ -345,14 +351,11 @@ const Profile = () => {
 
           {activeTab === 'professions' && (
             <div className="items-grid">
-              {user.enrolledProfessions && user.enrolledProfessions.length > 0 ? (
-                user.enrolledProfessions.map((profession) => (
+              {getUserCompletedProfessions() && getUserCompletedProfessions().length > 0 ? (
+                getUserCompletedProfessions().map((profession) => (
                   <div key={profession._id || profession.id} className="item">
                     <div className="item-header">
                       <h3 className="item-title">{profession.title}</h3>
-                      <span className={`badge-status ${profession.status === 'Completed' ? 'done' : 'progress'}`}>
-                        {profession.status}
-                      </span>
                     </div>
                     <div className="progress">
                       <div className="bar" style={{ width: `${profession.progress || 0}%` }}></div>

@@ -11,6 +11,7 @@ import {
   IconSettings,
   IconUserBolt,
   IconLogout,
+  IconBook,
 } from "@tabler/icons-react";
 import { motion } from "motion/react";
 import { cn } from "../../lib/utils";
@@ -42,6 +43,11 @@ function Sidebar({ children }) {
       label: "Dashboard",
       href: "/dashboard",
       icon: <IconBrandTabler className="h-5 w-5 shrink-0 text-black" />,
+    },
+    {
+      label: "My Learning",
+      href: "/learning",
+      icon: <IconBook className="h-5 w-5 shrink-0 text-black" />,
     },
     {
       label: "Profile",
