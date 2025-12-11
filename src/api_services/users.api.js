@@ -18,6 +18,19 @@ axiosInstance.interceptors.request.use((config) => {
   return config;
 });
 
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // Handle unauthorized errors globally
+    if (error.response && error.response.status === 401) {
+      // Clear auth data
+      localStorage.removeItem('abhyaasi_authToken');
+      localStorage.removeItem('abhyaasi_user');
+    }
+    return Promise.reject(error);
+  }
+);
+
 // Auth & Registration
 export const registerUser = async (userData) => {
   try {
@@ -140,11 +153,11 @@ export const trackUserActivity = async (activityData) => {
 };
 
 // Image Upload
-export const uploadImage = async (formData) => {
+export const uploadImage = async (file) => {
   try {
     const response = await axios.post(
       `${API_BASE_URL}/api/v1/users/upload-image`,
-      formData,
+      file,
       {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -170,6 +183,15 @@ export const updateEmail = async (email, otp) => {
 export const deleteAccount = async (otp) => {
   try {
     const response = await axiosInstance.post('/delete_user', { otp });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
+
+export const trackActivity = async () => {
+  try {
+    const response = await axiosInstance.put('/track_user_activity');
     return response.data;
   } catch (error) {
     throw error.response?.data || error;

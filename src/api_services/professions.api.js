@@ -19,6 +19,15 @@ axiosInstance.interceptors.request.use((config) => {
 });
 
 // Get Operations
+export const getAllProfessions = async () => {
+  try {
+    const response = await axiosInstance.get('/get_all');
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
+
 export const getProfession = async (professionId) => {
   try {
     const response = await axiosInstance.get(`/get/${professionId}`);

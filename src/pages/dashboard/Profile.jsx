@@ -1,69 +1,137 @@
-'use client';
 
-import { useState, useRef } from 'react';
-import { Camera, Edit2, Check, X, Mail, MapPin, BookOpen, Award, Trophy, Calendar } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Camera, Edit2, Check, X, Mail, MapPin, BookOpen, Award, Trophy, Calendar, Loader } from 'lucide-react';
+import toast from 'react-hot-toast';
 import '../../styles/profile.css';
+import { addOrUpdateProfile, uploadImage } from '../../api_services/users.api';
+import { useApp } from '../../context/AppContext';
+import MinimalProgressBar from '../../components/dashboard/MinimalProgressBar';
 
 const Profile = () => {
-  // Mock user data - replace with Redux state later
-  const [user, setUser] = useState({
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    profile: {
-      bio: 'Passionate learner and developer',
-      college: 'XYZ University',
-      year: 3,
-      profilePic: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-    points: 2450,
-    rank: 'Silver',
-    badges: [
-      { id: 1, name: 'Code Master', icon: '⚡' },
-      { id: 2, name: 'Problem Solver', icon: '🧩' },
-      { id: 3, name: 'Consistent Learner', icon: '🔥' },
-    ],
-    completedCourses: [
-      { id: 1, title: 'React Fundamentals', progress: 100, certificate: true },
-      { id: 2, title: 'Advanced JavaScript', progress: 100, certificate: true },
-      { id: 3, title: 'Web Design Basics', progress: 100, certificate: true },
-    ],
-    enrolledProfessions: [
-      { id: 1, title: 'Full Stack Developer', progress: 65, status: 'In Progress' },
-      { id: 2, title: 'Frontend Engineer', progress: 100, status: 'Completed' },
-    ],
-  });
-
+  const { user, userLoading, refetchUser, getUserCompletedCourses, getUserCompletedProfessions } = useApp();
+  const [saveLoading, setSaveLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [editData, setEditData] = useState(user.profile);
-  const [editName, setEditName] = useState(user.name);
+  const [editData, setEditData] = useState({});
+  const [editName, setEditName] = useState('');
   const [activeTab, setActiveTab] = useState('courses');
+  const [uploadingImage, setUploadingImage] = useState(false);
   const fileInputRef = useRef(null);
+
+  // Update edit form when user data changes
+  useEffect(() => {
+    if (user) {
+      setEditName(user.name || 'User');
+      setEditData({
+        bio: user.profile?.bio || '',
+        college: user.profile?.college || '',
+        year: user.profile?.year || null,
+      });
+    }
+  }, [user]);
 
   const handleEditChange = (field, value) => {
     setEditData({ ...editData, [field]: value });
   };
 
-  const handleProfilePicChange = (e) => {
+  const handleProfilePicChange = async (e) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setUser({ ...user, profile: { ...user.profile, profilePic: event.target?.result } });
-      };
-      reader.readAsDataURL(file);
+      try {
+        setUploadingImage(true);
+
+        // Validate file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+          toast.error('File size must be less than 5MB');
+          return;
+        }
+
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+          toast.error('Please select a valid image file');
+          return;
+        }
+
+        // Upload to server
+        const formData = new FormData();
+        formData.append('image', file);
+
+        const response = await uploadImage(formData);
+        const imageUrl = response.url || response.data.url;
+
+        // lets call update profile api to update profile pic
+        await addOrUpdateProfile({ profilePic: imageUrl });
+
+        // Refetch user data to get updated profile
+        await refetchUser();
+        toast.success('Profile picture updated successfully');
+      } catch (error) {
+        console.error('Error uploading image:', error);
+        toast.error(error.message || 'Failed to upload image');
+      } finally {
+        setUploadingImage(false);
+      }
     }
   };
 
-  const handleSaveProfile = () => {
-    setUser({ ...user, name: editName, profile: editData });
-    setIsEditing(false);
+  const handleSaveProfile = async () => {
+    try {
+      setSaveLoading(true);
+
+      const profileData = {
+        name: editName,
+        bio: editData.bio,
+        college: editData.college,
+        year: editData.year,
+      };
+
+      await addOrUpdateProfile(profileData);
+
+      // Refetch user data to get updated profile
+      await refetchUser();
+
+      setIsEditing(false);
+      toast.success('Profile updated successfully');
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast.error(error.message || 'Failed to update profile');
+    } finally {
+      setSaveLoading(false);
+    }
   };
 
   const handleCancelEdit = () => {
-    setEditData(user.profile);
-    setEditName(user.name);
+    if (user) {
+      setEditData({
+        bio: user.profile?.bio || '',
+        college: user.profile?.college || '',
+        year: user.profile?.year || null,
+      });
+      setEditName(user.name || 'User');
+    }
     setIsEditing(false);
   };
+
+  // Show loading state
+  if (userLoading) {
+    return (
+      <div className="profile-container">
+        <div className="loading-container">
+          <Loader size={40} className="animate-spin" />
+          <p>Loading profile...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="profile-container">
+        <div className="error-container">
+          <p>Unable to load profile. Please refresh the page.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="profile-container">
@@ -71,15 +139,15 @@ const Profile = () => {
       <div className="profile-header">
         <div className="header-stats">
           <div className="stat">
-            <p className="stat-value">{user.rank}</p>
+            <p className="stat-value">{user.rank || 'Beginner'}</p>
             <p className="stat-label">Rank</p>
           </div>
           <div className="stat">
-            <p className="stat-value">{user.points}</p>
+            <p className="stat-value">{user.points || 0}</p>
             <p className="stat-label">Points</p>
           </div>
           <div className="stat">
-            <p className="stat-value">{user.completedCourses.length}</p>
+            <p className="stat-value">{user.completedCourses?.length || 0}</p>
             <p className="stat-label">Completed</p>
           </div>
         </div>
@@ -92,13 +160,14 @@ const Profile = () => {
             {/* Left: Profile Picture */}
             <div className="pic-section">
               <div className="profile-pic-container">
-                <img src={user.profile.profilePic} alt={user.name} className="profile-pic" />
+                <img src={user.profile?.profilePic || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'} alt={user.name} className="profile-pic" />
                 <button
                   className="pic-edit-btn"
                   onClick={() => fileInputRef.current?.click()}
                   title="Change profile picture"
+                  disabled={uploadingImage}
                 >
-                  <Camera size={16} />
+                  {uploadingImage ? <Loader size={16} className="animate-spin" /> : <Camera size={16} />}
                 </button>
                 <input
                   ref={fileInputRef}
@@ -106,6 +175,7 @@ const Profile = () => {
                   accept="image/*"
                   onChange={handleProfilePicChange}
                   className="hidden-input"
+                  disabled={uploadingImage}
                 />
               </div>
             </div>
@@ -122,15 +192,15 @@ const Profile = () => {
                   <div className="profile-meta">
                     <div className="meta-item">
                       <span className="label">Bio</span>
-                      <p className="value">{user.profile.bio || '—'}</p>
+                      <p className="value">{user.profile?.bio || '—'}</p>
                     </div>
                     <div className="meta-item">
                       <span className="label">College</span>
-                      <p className="value">{user.profile.college || '—'}</p>
+                      <p className="value">{user.profile?.college || '—'}</p>
                     </div>
                     <div className="meta-item">
                       <span className="label">Year</span>
-                      <p className="value">{user.profile.year ? `Year ${user.profile.year}` : '—'}</p>
+                      <p className="value">{user.profile?.year ? `Year ${user.profile.year}` : '—'}</p>
                     </div>
                   </div>
 
@@ -180,7 +250,7 @@ const Profile = () => {
                     <label className="edit-label">Year</label>
                     <select
                       value={editData.year || ''}
-                      onChange={(e) => handleEditChange('year', parseInt(e.target.value))}
+                      onChange={(e) => handleEditChange('year', parseInt(e.target.value) || null)}
                       className="edit-input"
                     >
                       <option value="">Select Year</option>
@@ -193,10 +263,18 @@ const Profile = () => {
                   </div>
 
                   <div className="edit-actions">
-                    <button className="btn-save" onClick={handleSaveProfile}>
-                      <Check size={14} /> Save
+                    <button
+                      className="btn-save"
+                      onClick={handleSaveProfile}
+                      disabled={saveLoading}
+                    >
+                      {saveLoading ? <Loader size={14} className="animate-spin" /> : <Check size={14} />} Save
                     </button>
-                    <button className="btn-cancel" onClick={handleCancelEdit}>
+                    <button
+                      className="btn-cancel"
+                      onClick={handleCancelEdit}
+                      disabled={saveLoading}
+                    >
                       <X size={14} /> Cancel
                     </button>
                   </div>
@@ -206,14 +284,21 @@ const Profile = () => {
           </div>
         </div>
 
+        {/* Learning Progress */}
+        {user.currentCourse && (
+          <div className="section">
+            <MinimalProgressBar />
+          </div>
+        )}
+
         {/* Badges - Minimal */}
-        {user.badges.length > 0 && (
+        {user.badges && user.badges.length > 0 && (
           <div className="section">
             <h2 className="section-title">Achievements</h2>
             <div className="badges-grid">
               {user.badges.map((badge) => (
-                <div key={badge.id} className="badge">
-                  <span className="badge-icon">{badge.icon}</span>
+                <div key={badge._id || badge.id} className="badge">
+                  <span className="badge-icon">{badge.icon || '🏆'}</span>
                   <span className="badge-name">{badge.name}</span>
                 </div>
               ))}
@@ -243,17 +328,15 @@ const Profile = () => {
 
           {activeTab === 'courses' && (
             <div className="items-grid">
-              {user.completedCourses.length > 0 ? (
-                user.completedCourses.map((course) => (
-                  <div key={course.id} className="item">
+              {getUserCompletedCourses() && getUserCompletedCourses().length > 0 ? (
+                getUserCompletedCourses().map((course) => (
+                  <div key={course._id || course.id} className="item">
                     <div className="item-header">
                       <h3 className="item-title">{course.title}</h3>
-                      <span className={`badge-status ${course.progress === 100 ? 'done' : 'progress'}`}>
-                        {course.progress === 100 ? 'Done' : `${course.progress}%`}
-                      </span>
+
                     </div>
                     <div className="progress">
-                      <div className="bar" style={{ width: `${course.progress}%` }}></div>
+                      <div className="bar" style={{ width: `${course.progress || 0}%` }}></div>
                     </div>
                     {course.certificate && (
                       <button className="action-btn">View Certificate</button>
@@ -268,17 +351,14 @@ const Profile = () => {
 
           {activeTab === 'professions' && (
             <div className="items-grid">
-              {user.enrolledProfessions.length > 0 ? (
-                user.enrolledProfessions.map((profession) => (
-                  <div key={profession.id} className="item">
+              {getUserCompletedProfessions() && getUserCompletedProfessions().length > 0 ? (
+                getUserCompletedProfessions().map((profession) => (
+                  <div key={profession._id || profession.id} className="item">
                     <div className="item-header">
                       <h3 className="item-title">{profession.title}</h3>
-                      <span className={`badge-status ${profession.status === 'Completed' ? 'done' : 'progress'}`}>
-                        {profession.status}
-                      </span>
                     </div>
                     <div className="progress">
-                      <div className="bar" style={{ width: `${profession.progress}%` }}></div>
+                      <div className="bar" style={{ width: `${profession.progress || 0}%` }}></div>
                     </div>
                     <button className="action-btn">
                       {profession.status === 'Completed' ? 'Review' : 'Continue'}

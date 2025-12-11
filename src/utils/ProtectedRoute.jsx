@@ -1,10 +1,8 @@
-import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
 
 const ProtectedRoute = () => {
-  const { isLoggedIn } = useSelector((state) => state.auth);
+  const isLoggedIn = localStorage.getItem("abhyaasi_authToken") ? true : false;
   return isLoggedIn ? <Outlet /> : <Navigate to="/" replace />;
 };
 
 export default ProtectedRoute;
-  

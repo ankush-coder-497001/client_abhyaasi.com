@@ -38,6 +38,7 @@ const Dashboard = () => {
       <div className="px-4 md:px-6 pb-6">
         <CourseHistory />
       </div>
+
     </div>
 
   );
