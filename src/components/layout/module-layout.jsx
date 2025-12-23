@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, BookOpen, Brain, Code2, Briefcase, Loader, CheckCircle } from 'lucide-react';
 import { getModule } from '../../api_services/modules.api';
 import { useApp } from '../../context/AppContext';
+import PageTransition from './PageTransition.jsx';
 import TheorySection from '../sections/theory-section';
 import MCQSection from '../sections/mcq-section';
 import CodingSection from '../sections/coding-section';
@@ -196,7 +197,9 @@ export default function ModuleLayout() {
             </div>
 
             <div className="flex-1 overflow-auto">
-              {renderSection()}
+              <PageTransition>
+                {renderSection()}
+              </PageTransition>
             </div>
           </>
         )}

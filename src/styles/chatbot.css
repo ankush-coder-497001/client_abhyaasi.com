@@ -1,0 +1,138 @@
+/* Optional: Chatbot Additional Styling */
+
+/* Smooth scrollbar for chat messages */
+.chat-messages-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-messages-container::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+
+.chat-messages-container::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+.chat-messages-container::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Firefox scrollbar */
+.chat-messages-container {
+  scrollbar-color: #cbd5e1 #f1f5f9;
+  scrollbar-width: thin;
+}
+
+/* Animation for message pulse */
+@keyframes messagePulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.message-pulse {
+  animation: messagePulse 2s ease-in-out infinite;
+}
+
+/* Typing indicator animation */
+@keyframes typing {
+
+  0%,
+  20% {
+    content: '';
+  }
+
+  40% {
+    content: '.';
+  }
+
+  60% {
+    content: '..';
+  }
+
+  80%,
+  100% {
+    content: '...';
+  }
+}
+
+.typing-indicator::after {
+  animation: typing 1.5s infinite;
+  content: '';
+}
+
+/* Gradient text for headers */
+.chat-gradient-text {
+  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Message glow effect on hover */
+.message-item:hover {
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+/* Input focus effect */
+.chat-input:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Button hover glow */
+.chat-button-glow:hover {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+}
+
+/* Dark mode support (if needed) */
+@media (prefers-color-scheme: dark) {
+  .chat-messages-container {
+    background: #1e293b;
+  }
+
+  .message-item {
+    background: #334155;
+    color: #e2e8f0;
+  }
+
+  .chat-input {
+    background: #334155;
+    color: #e2e8f0;
+    border-color: #475569;
+  }
+}
+
+/* Responsive design for mobile */
+@media (max-width: 640px) {
+  .chat-dialog {
+    width: calc(100vw - 32px) !important;
+    max-height: 70vh !important;
+    bottom: 80px !important;
+    right: 16px !important;
+  }
+
+  .floating-chat-button {
+    bottom: 16px !important;
+    right: 16px !important;
+  }
+}
+
+/* Accessibility - reduced motion */
+@media (prefers-reduced-motion: reduce) {
+
+  .chat-dialog,
+  .message-item,
+  .floating-chat-button {
+    animation: none !important;
+    transition: none !important;
+  }
+}
