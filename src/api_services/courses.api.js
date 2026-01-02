@@ -102,4 +102,6 @@ export const removeCourse = async (courseId) => {
   }
 };
 
+
+
 export default axiosInstance;

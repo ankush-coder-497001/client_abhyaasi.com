@@ -5,6 +5,7 @@ import ProfileSection from "../../components/dashboard/ProfileSection";
 import PremiumCalendar from "../../components/dashboard/PremiumCalendar";
 import LeaderboardCard from "../../components/dashboard/LeaderboardCard";
 import CourseHistory from "../../components/dashboard/CourseHistory";
+import CompletedProfessions from "../../components/dashboard/CompletedProfessions";
 import Courses from "../courses/Courses";
 
 const Dashboard = () => {
@@ -34,9 +35,12 @@ const Dashboard = () => {
             <LeaderboardCard />
           </div>
         </div>
-      </div>      {/* Bottom: Course History */}
+      </div>      {/* Bottom: Course History and Completed Professions */}
       <div className="px-4 md:px-6 pb-6">
-        <CourseHistory />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <CourseHistory />
+          <CompletedProfessions />
+        </div>
       </div>
 
     </div>

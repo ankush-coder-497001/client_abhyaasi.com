@@ -121,6 +121,11 @@
   color: var(--success-color);
 }
 
+.premium-badge-purple {
+  background: rgba(147, 51, 234, 0.1);
+  color: #7c3aed;
+}
+
 /* Divider */
 .premium-divider {
   height: 1px;

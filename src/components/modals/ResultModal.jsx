@@ -94,9 +94,12 @@ export default function ResultModal({
   };
 
   const getButtonText = () => {
-    if (isCourseCompleted || isProfessionCompleted) return 'Go to Dashboard';
-    if (isModuleCompleted) return 'Next Module';
-    if (isPassed) return type === 'mcq' ? 'Next Section' : 'Next Section';
+    if (isCourseCompleted || isProfessionCompleted) return 'Nicee!';
+    if (isModuleCompleted) return 'Cool!';
+    if (isPassed) {
+      if (type === 'coding') return 'Next Section';
+      return type === 'mcq' ? 'Next Section' : 'Next Section';
+    }
     return 'Try Again';
   };
 
@@ -140,12 +143,15 @@ export default function ResultModal({
               <h2 className={`text-lg font-bold ${getScoreColor()}`}>{getTitle()}</h2>
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          {/* Hide close button for passed coding, module completed, or course/profession completed */}
+          {!(type === 'coding' && isPassed) && !isModuleCompleted && !isCourseCompleted && !isProfessionCompleted && (
+            <button
+              onClick={onClose}
+              className="text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          )}
         </div>
 
         {/* Score Display */}
@@ -227,15 +233,18 @@ export default function ResultModal({
 
         {/* Action Buttons */}
         <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex gap-3">
-          <button
-            onClick={onClose}
-            className="flex-1 px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors text-sm font-medium"
-          >
-            Close
-          </button>
+          {/* Show Close button only if: NOT (passed coding OR module/course/profession completed) */}
+          {!(type === 'coding' && isPassed) && !isModuleCompleted && !isCourseCompleted && !isProfessionCompleted && (
+            <button
+              onClick={onClose}
+              className="flex-1 px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors text-sm font-medium"
+            >
+              Close
+            </button>
+          )}
           <button
             onClick={onNext}
-            className={`flex-1 px-4 py-2 text-white rounded-lg transition-colors text-sm font-medium ${isCourseCompleted || isProfessionCompleted
+            className={`${(type === 'coding' && isPassed) || isModuleCompleted || isCourseCompleted || isProfessionCompleted ? 'w-full' : 'flex-1'} px-4 py-2 text-white rounded-lg transition-colors text-sm font-medium ${isCourseCompleted || isProfessionCompleted
               ? 'bg-purple-600 hover:bg-purple-700'
               : 'bg-blue-600 hover:bg-blue-700'
               }`}

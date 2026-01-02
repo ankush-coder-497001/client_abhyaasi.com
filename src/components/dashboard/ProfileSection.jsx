@@ -1,9 +1,10 @@
-import React from "react";
+import React, { use, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useApp } from "../../context/AppContext";
 
 const ProfileSection = () => {
   const { user } = useApp();
+  const [days, setDays] = useState(0);
 
   const userData = {
     name: user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : user?.name || "User",
@@ -13,6 +14,21 @@ const ProfileSection = () => {
     totalPoints: user?.points || 0,
     rank: user?.rank || "Beginner",
   };
+
+
+  useEffect(() => {
+    // lest filter activityHistory to count unique days
+    if (user && user.activityHistory) {
+      const uniqueDays = new Set(
+        user.activityHistory.map((activity) =>
+          new Date(activity.date).toDateString()
+        )
+      );
+      setDays(uniqueDays.size);
+    } else {
+      setDays(0);
+    }
+  }, [user])
 
 
   return (
@@ -50,7 +66,7 @@ const ProfileSection = () => {
         {/* Streak */}
         <div className="text-center p-1 bg-blue-50 rounded">
           <div className="text-sm mb-0.5">🔥</div>
-          <div className="text-xs font-bold text-blue-600">{Math.abs(userData.streak)}</div>
+          <div className="text-xs font-bold text-blue-600">{days}</div>
           <div className="text-xs text-gray-600">Days</div>
         </div>
 

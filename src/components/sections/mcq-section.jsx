@@ -34,7 +34,7 @@ const DEFAULT_MCQS = [
   },
 ];
 
-export default function MCQSection({ moduleData, moduleId, onSuccess }) {
+export default function MCQSection({ moduleData, moduleId, onSuccess, onNavigate }) {
   const navigate = useNavigate();
   const { refetchUser } = useApp();
   const [selectedAnswers, setSelectedAnswers] = useState({});
@@ -144,13 +144,6 @@ export default function MCQSection({ moduleData, moduleId, onSuccess }) {
       setSubmissionResult(data);
       setShowResultModal(true);
       setSubmitted(true);
-
-      // Silently refetch data in background ONLY if passed
-      // Don't refetch on fail/cooldown to avoid unnecessary reloads
-      if (data.passed) {
-        // Delay slightly to ensure modal is displayed first
-        setTimeout(() => onSuccess?.(), 100);
-      }
     } catch (err) {
       // Handle different error scenarios
       let errorMsg = 'Failed to submit MCQ. Please try again.';
@@ -208,25 +201,26 @@ export default function MCQSection({ moduleData, moduleId, onSuccess }) {
     const { isCourseCompleted, isProfessionCompleted, isModuleCompleted, passed } = submissionResult;
 
     if (isProfessionCompleted) {
-      // User completed entire profession
+      // Do not auto redirect - user will click button
       toast.success('🎓 Profession completed! Certificate generated.');
-      setTimeout(() => navigate('/learning'), 800);
+      onNavigate('interview');
     } else if (isCourseCompleted) {
-      // User completed all modules in course
+      // Do not auto redirect - user will click button
       toast.success('🎉 Course completed! Certificate generated.');
-      setTimeout(() => navigate('/learning'), 800);
+      onNavigate('interview');
     } else if (isModuleCompleted) {
-      // User completed current module and moved to next
-      toast.success('Module completed! Moving to next module...');
-      await refetchUser(); // Refetch to get updated currentModule
-      setTimeout(() => window.location.reload(), 500); // Reload to show next module
+      // Do not auto redirect - user will click button
+      toast.success('Module completed! Click "Next Module" button to continue.');
+      onNavigate('interview');
     } else if (passed) {
-      // Passed MCQ but coding not yet done (or vice versa)
+      // Passed MCQ but coding not yet done (or vice versa) - don't close modal, just refetch silently
       toast.success('✓ MCQ passed! Complete the coding challenge to finish the module.');
-      // Silently refetch in background
-      await refetchUser();
+      //reload the data
+      onSuccess()
+      // move to coding section
+      onNavigate('coding');
     } else {
-      // Failed - reset for retry
+      // Failed - show retry button, don't navigate or reload
       if (!cooldownUntil || new Date() >= cooldownUntil) {
         handleReset();
       }
@@ -253,9 +247,12 @@ export default function MCQSection({ moduleData, moduleId, onSuccess }) {
       />
       <div className="p-2.5 space-y-1.5 h-full flex flex-col">
         <div className="space-y-0.5">
-          <div className="flex items-center gap-1">
-            <Brain className="w-3.5 h-3.5 text-blue-600" />
-            <h2 className="text-xs font-bold text-black">Multiple Choice Questions</h2>
+          <div className="flex items-center justify-between gap-1">
+            <div className="flex items-center gap-1">
+              <Brain className="w-3.5 h-3.5 text-blue-600" />
+              <h2 className="text-xs font-bold text-black">Multiple Choice Questions</h2>
+            </div>
+
           </div>
           <div className="flex items-center justify-between text-xs">
             <p className="text-gray-600">

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaPlayCircle, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaPlayCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../../context/AppContext";
 
@@ -9,6 +9,7 @@ const MinimalProgressBar = () => {
   const [progressData, setProgressData] = useState({
     module: "",
     course: "",
+    profession: "",
     moduleProgress: 0,
     courseProgress: 0,
     points: 0,
@@ -25,12 +26,22 @@ const MinimalProgressBar = () => {
 
       // Calculate course progress
       let completedModules = 0;
-      let totalModules = currentCourse.modules?.length || 0;
+      let totalModules = 0;
       let courseProgress = 0;
       let moduleProgress = 0;
 
       if (user.moduleProgress && Array.isArray(user.moduleProgress)) {
-        // Count completed modules
+        // If enrolled in profession, totalModules is the moduleProgress length (all courses)
+        // If enrolled in single course, only count modules in currentCourse
+        if (user.currentProfession) {
+          // For profession: all modules in moduleProgress are from all profession courses
+          totalModules = user.moduleProgress.length;
+        } else {
+          // For single course: only count currentCourse modules
+          totalModules = currentCourse.modules?.length || 0;
+        }
+
+        // Count completed modules (both MCQ and Coding done)
         completedModules = user.moduleProgress.filter(
           m => m.isMcqCompleted && m.isCodingCompleted
         ).length;
@@ -54,14 +65,24 @@ const MinimalProgressBar = () => {
         }
       }
 
+      // Get module title
       const currentModuleTitle = currentModule?.title ||
         currentCourse.modules?.find(m => m._id === user.currentModule)?._id ||
         "Current Module";
 
+      // Get course title - handle both string and object
+      const courseName = typeof currentCourse === 'object'
+        ? (currentCourse.title || "Current Course")
+        : "Current Course";
+
+      // Get profession name if available
+      const professionName = user.currentProfession?.name || "";
+
       setProgressData({
         module: currentModuleTitle,
         moduleId: currentModule?._id || user.currentModule,
-        course: currentCourse.title || "Current Course",
+        course: courseName,
+        profession: professionName,
         moduleProgress,
         courseProgress,
         points: user.points || 0,
@@ -71,7 +92,7 @@ const MinimalProgressBar = () => {
     } catch (error) {
       console.error('Error calculating progress:', error);
     }
-  }, [user?.currentCourse, user?.moduleProgress, user?.currentModule, user?.points]);
+  }, [user?.currentCourse, user?.moduleProgress, user?.currentModule, user?.points, user?.currentProfession]);
 
   // If user doesn't have a current course
   if (!user?.currentCourse) {
@@ -92,6 +113,17 @@ const MinimalProgressBar = () => {
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+      {/* Profession Info - if enrolled through profession */}
+      {progressData.profession && (
+        <div className="mb-3 pb-3 border-b border-gray-200">
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 bg-purple-600 rounded-full" />
+            <span className="text-xs font-semibold text-gray-600">Career Path:</span>
+            <p className="text-xs text-gray-700 font-medium">{progressData.profession}</p>
+          </div>
+        </div>
+      )}
+
       {/* Course Progress Section */}
       <div className="mb-4">
         <div className="flex items-center justify-between gap-2 mb-2">

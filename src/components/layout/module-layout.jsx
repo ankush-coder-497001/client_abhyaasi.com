@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, BookOpen, Brain, Code2, Briefcase, Loader, CheckCircle } from 'lucide-react';
 import { getModule } from '../../api_services/modules.api';
 import { useApp } from '../../context/AppContext';
+import PageTransition from './PageTransition.jsx';
 import TheorySection from '../sections/theory-section';
 import MCQSection from '../sections/mcq-section';
 import CodingSection from '../sections/coding-section';
@@ -27,8 +28,13 @@ const USER_MESSAGES = [
 
 export default function ModuleLayout() {
   const navigate = useNavigate();
-  const { user, userLoading } = useApp();
+  const { user, userLoading, refetchUser } = useApp();
 
+  useEffect(() => {
+    if (user && !user.currentModule) {
+      navigate('/dashboard');
+    }
+  }, [])
   // Get moduleId from user's currentModule
   const moduleId = user?.currentModule._id;
 
@@ -80,9 +86,9 @@ export default function ModuleLayout() {
       case 'theory':
         return <TheorySection moduleData={moduleData} />;
       case 'mcq':
-        return <MCQSection moduleData={moduleData} moduleId={moduleId} onSuccess={fetchModule} />;
+        return <MCQSection moduleData={moduleData} moduleId={moduleId} onSuccess={fetchModule} onNavigate={setActiveSection} />;
       case 'coding':
-        return <CodingSection moduleData={moduleData} moduleId={moduleId} onSuccess={fetchModule} />;
+        return <CodingSection moduleData={moduleData} moduleId={moduleId} onSuccess={fetchModule} onNavigate={setActiveSection} />;
       case 'interview':
         return <InterviewSection moduleData={moduleData} />;
       default:
@@ -121,6 +127,42 @@ export default function ModuleLayout() {
           <p className="hidden md:block text-xs md:text-sm text-blue-600 font-medium text-right max-w-xs transition-all duration-500 text-pretty">
             {USER_MESSAGES[messageIndex]}
           </p>
+
+          {/* Next Module Button */}
+          {moduleData?.isProfessionCompleted ? (
+            <button
+              onClick={async () => {
+                await refetchUser();
+                navigate('/learning');
+              }}
+              className="ml-4 px-4 py-2 bg-purple-600 text-white text-sm font-semibold rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2 whitespace-nowrap"
+            >
+              <CheckCircle className="w-4 h-4" />
+              Next
+            </button>
+          ) : moduleData?.isCourseCompleted ? (
+            <button
+              onClick={async () => {
+                await refetchUser();
+                navigate('/learning');
+              }}
+              className="ml-4 px-4 py-2 bg-purple-600 text-white text-sm font-semibold rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2 whitespace-nowrap"
+            >
+              <CheckCircle className="w-4 h-4" />
+              Next
+            </button>
+          ) : moduleData?.isModuleCompleted ? (
+            <button
+              onClick={async () => {
+                await refetchUser();
+                setActiveSection('theory');
+              }}
+              className="ml-4 px-4 py-2 bg-purple-600 text-white text-sm font-semibold rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2 whitespace-nowrap"
+            >
+              <CheckCircle className="w-4 h-4" />
+              Next
+            </button>
+          ) : null}
         </div>
       </nav>
 
@@ -148,6 +190,14 @@ export default function ModuleLayout() {
               {/* Sidebar Header */}
               <div className="px-4 py-4 border-b border-gray-200">
                 <h2 className="text-gray-900 font-bold text-sm">LearnHub</h2>
+                {user?.currentProfession && (
+                  <p className="text-purple-600 text-xs mt-0.5 font-semibold">{user.currentProfession.name}</p>
+                )}
+                {user?.currentCourse && (
+                  <p className="text-blue-600 text-xs mt-0.5 font-semibold truncate" title={typeof user.currentCourse === 'object' ? user.currentCourse.title : 'Course'}>
+                    {typeof user.currentCourse === 'object' ? user.currentCourse.title?.substring(0, 20) : 'Course'}
+                  </p>
+                )}
                 <p className="text-gray-500 text-xs mt-0.5">{moduleData?.title?.substring(0, 20) || 'Learning'}</p>
               </div>
 
@@ -183,20 +233,13 @@ export default function ModuleLayout() {
                 })}
               </nav>
 
-              {/* Sidebar Footer */}
-              <div className="px-3 py-3 border-t border-gray-200 space-y-2">
-                <div className="space-y-0.5">
-                  <p className="text-gray-600 text-xs font-semibold">Progress</p>
-                  <div className="w-full bg-gray-200 rounded-full h-1">
-                    <div className="bg-blue-600 h-1 rounded-full w-1/3 transition-all"></div>
-                  </div>
-                  <p className="text-gray-500 text-xs">33% Complete</p>
-                </div>
-              </div>
+
             </div>
 
             <div className="flex-1 overflow-auto">
-              {renderSection()}
+              <PageTransition>
+                {renderSection()}
+              </PageTransition>
             </div>
           </>
         )}

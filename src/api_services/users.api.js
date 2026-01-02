@@ -127,6 +127,7 @@ export const addOrUpdateProfile = async (profileData) => {
 export const getUser = async () => {
   try {
     const response = await axiosInstance.get('/get_user');
+    console.log("getUser response:", response);
     return response.data;
   } catch (error) {
     throw error.response?.data || error;
@@ -192,6 +193,24 @@ export const deleteAccount = async (otp) => {
 export const trackActivity = async () => {
   try {
     const response = await axiosInstance.put('/track_user_activity');
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
+
+export const downloadCertificate = async (certificateUrl, filename) => {
+  try {
+    const response = await axiosInstance.post(
+      '/download-certificate',
+      {
+        certificateUrl,
+        filename
+      },
+      {
+        responseType: 'blob'
+      }
+    );
     return response.data;
   } catch (error) {
     throw error.response?.data || error;

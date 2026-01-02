@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Search, Filter, Briefcase, Loader } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import ProfessionCard from "../../components/ui/ProfessionCard";
 import { useApp } from "../../context/AppContext";
 
 const Professions = () => {
-  const { professions, professionsLoading, enrollProfession, unenrollProfession, enrollmentLoading, isProfessionEnrolled } = useApp();
+  const navigate = useNavigate();
+  const { professions, professionsLoading, enrollProfession, unenrollProfession, enrollmentLoading, isProfessionEnrolled, isProfessionCompleted } = useApp();
   const [filterDifficulty, setFilterDifficulty] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -28,6 +30,7 @@ const Professions = () => {
         // Enroll in profession
         await enrollProfession(professionId);
         toast.success('Successfully enrolled in profession');
+        navigate('/learning');
       }
     } catch (error) {
       console.error('Error toggling enrollment:', error);
@@ -107,6 +110,7 @@ const Professions = () => {
             key={profession._id}
             data={profession}
             isEnrolled={isProfessionEnrolled(profession._id)}
+            isCompleted={isProfessionCompleted(profession._id)}
             onEnroll={() => handleEnroll(profession._id)}
             isLoading={enrollmentLoading}
           />

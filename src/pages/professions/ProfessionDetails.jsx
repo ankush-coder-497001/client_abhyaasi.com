@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { ChevronDown, ArrowLeft, Play, Loader, X, BookOpen } from "lucide-react"
+import { ChevronDown, ArrowLeft, Play, Loader, X, BookOpen, CheckCircle } from "lucide-react"
 import { useParams, Link, useNavigate } from "react-router-dom"
 import toast from "react-hot-toast"
 import { useApp } from "../../context/AppContext"
@@ -127,7 +127,7 @@ function CourseItem({ course, courseData, index, enrolled, expandedCourse, setEx
 export default function ProfessionDetails() {
   const navigate = useNavigate()
   const { professionId } = useParams()
-  const { professions, courses, enrollmentLoading, isProfessionEnrolled, enrollProfession, unenrollProfession } = useApp()
+  const { professions, courses, enrollmentLoading, isProfessionEnrolled, isProfessionCompleted, enrollProfession, unenrollProfession } = useApp()
   const [expandedCourse, setExpandedCourse] = useState(null)
   const [courseProgress, setCourseProgress] = useState({})
   const [showUnenrollModal, setShowUnenrollModal] = useState(false)
@@ -135,6 +135,7 @@ export default function ProfessionDetails() {
   // Get profession from context
   const profession = professions.find(p => p._id === professionId)
   const enrolled = profession ? isProfessionEnrolled(professionId) : false
+  const completed = profession ? isProfessionCompleted(professionId) : false
 
   // Enrich profession courses with full course data
   const enrichedCourses = profession?.courses?.map(pc => ({
@@ -150,6 +151,7 @@ export default function ProfessionDetails() {
       } else {
         await enrollProfession(professionId)
         toast.success('Successfully enrolled in profession')
+        navigate('/learning')
       }
     } catch (error) {
       console.error('Error during enrollment action:', error)
@@ -227,14 +229,23 @@ export default function ProfessionDetails() {
             </div>
             <button
               onClick={handleEnroll}
-              disabled={enrollmentLoading}
-              className={`shrink-0 px-6 py-2.5 rounded-lg text-xs font-semibold transition-all duration-300 whitespace-nowrap shadow-sm hover:shadow-md disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2 ${enrolled ? "bg-black text-white hover:bg-gray-800" : "bg-purple-600 text-white hover:bg-purple-700"
+              disabled={enrollmentLoading || completed}
+              className={`shrink-0 px-6 py-2.5 rounded-lg text-xs font-semibold transition-all duration-300 whitespace-nowrap shadow-sm hover:shadow-md disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2 ${completed
+                ? "bg-green-100 text-green-700 hover:bg-green-100"
+                : enrolled
+                  ? "bg-black text-white hover:bg-gray-800"
+                  : "bg-purple-600 text-white hover:bg-purple-700"
                 }`}
             >
               {enrollmentLoading ? (
                 <>
                   <Loader size={14} className="animate-spin" />
                   {enrolled ? "Unenrolling..." : "Enrolling..."}
+                </>
+              ) : completed ? (
+                <>
+                  <CheckCircle size={16} />
+                  <span>Completed</span>
                 </>
               ) : (
                 <>
