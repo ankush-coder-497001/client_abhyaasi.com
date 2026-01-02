@@ -4,6 +4,7 @@ import { initializeGoogleSDK } from "./utils/googleOAuth";
 import "./styles/premium-dashboard.css";
 import { AppProvider } from "./context/AppContext";
 import { ChatProvider } from "./context/ChatContext";
+import { EditorThemeProvider } from "./context/EditorThemeContext";
 import DashboardLayout from "./components/layout/DashboardLayout.jsx";
 import PageTransition from "./components/layout/PageTransition.jsx";
 import ProtectedRoute from "./utils/ProtectedRoute.jsx";
@@ -30,42 +31,44 @@ function App() {
 
   return (
     <ChatProvider>
-      <BrowserRouter>
-        <AppProvider>
-          <Toaster position="bottom-left" reverseOrder={false} />
-          <FloatingChatButton />
-          <ChatDialog />
+      <EditorThemeProvider>
+        <BrowserRouter>
+          <AppProvider>
+            <Toaster position="bottom-left" reverseOrder={false} />
+            <FloatingChatButton />
+            <ChatDialog />
 
-          <Routes>
-            {/* public routes */}
-            <Route path="/" element={<PageTransition><AuthContainer /></PageTransition>} />
-            <Route path="/tokenexpired" element={<PageTransition><TokenExpired /></PageTransition>} />
-            {/* protected routes */}
-            <Route element={<ProtectedRoute />}>
-              <Route element={<DashboardLayout />}>
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/learning" element={<Learning />} />
-                <Route path="/courses" element={<Courses />} />
-                <Route path="/professions" element={<Professions />} />
-                <Route path="/setting" element={<Setting />} />
-                <Route path="/course-details/:courseId" element={<CourseDetails />} />
-                <Route path="/profession-details/:professionId" element={<ProfessionDetails />} />
+            <Routes>
+              {/* public routes */}
+              <Route path="/" element={<PageTransition><AuthContainer /></PageTransition>} />
+              <Route path="/tokenexpired" element={<PageTransition><TokenExpired /></PageTransition>} />
+              {/* protected routes */}
+              <Route element={<ProtectedRoute />}>
+                <Route element={<DashboardLayout />}>
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/learning" element={<Learning />} />
+                  <Route path="/courses" element={<Courses />} />
+                  <Route path="/professions" element={<Professions />} />
+                  <Route path="/setting" element={<Setting />} />
+                  <Route path="/course-details/:courseId" element={<CourseDetails />} />
+                  <Route path="/profession-details/:professionId" element={<ProfessionDetails />} />
+                </Route>
               </Route>
-            </Route>
-            <Route element={<ProtectedRoute />}>
-              <Route path="/module" element={<ModuleLayout />} />
-              <Route path="/module/:moduleId" element={<ModuleLayout />} />
-            </Route>
-            {/* course details */}
-            <Route element={<ProtectedRoute />}>
-              <Route path="/course-details" element={<CourseDetails />} />
-            </Route>
-            {/* fall back */}
-            <Route path="*" element={<Navigate to="/" />} />
-          </Routes>
-        </AppProvider>
-      </BrowserRouter>
+              <Route element={<ProtectedRoute />}>
+                <Route path="/module" element={<ModuleLayout />} />
+                <Route path="/module/:moduleId" element={<ModuleLayout />} />
+              </Route>
+              {/* course details */}
+              <Route element={<ProtectedRoute />}>
+                <Route path="/course-details" element={<CourseDetails />} />
+              </Route>
+              {/* fall back */}
+              <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+          </AppProvider>
+        </BrowserRouter>
+      </EditorThemeProvider>
     </ChatProvider>
   );
 

@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { ChevronDown, ArrowLeft, Play, Loader, X } from "lucide-react"
-import { useParams, Link } from "react-router-dom"
+import { ChevronDown, ArrowLeft, Play, Loader, X, CheckCircle } from "lucide-react"
+import { useParams, Link, useNavigate } from "react-router-dom"
 import toast from "react-hot-toast"
 import { useApp } from "../../context/AppContext"
 
@@ -96,8 +96,9 @@ function ModuleItem({ module, index, enrolled, expandedModule, setExpandedModule
 }
 
 export default function CourseDetails() {
+  const navigate = useNavigate()
   const { courseId } = useParams()
-  const { courses, enrollmentLoading, isCoursEnrolled, enrollCourse, unenrollCourse } = useApp()
+  const { courses, enrollmentLoading, isCoursEnrolled, isCourseCompleted, enrollCourse, unenrollCourse } = useApp()
   const [expandedModule, setExpandedModule] = useState(null)
   const [moduleProgress, setModuleProgress] = useState({})
   const [showUnenrollModal, setShowUnenrollModal] = useState(false)
@@ -105,6 +106,7 @@ export default function CourseDetails() {
   // Get course from context
   const course = courses.find(c => c._id === courseId)
   const enrolled = course ? isCoursEnrolled(courseId) : false
+  const completed = course ? isCourseCompleted(courseId) : false
 
   console.log('Course Details - course:', course)
 
@@ -116,6 +118,7 @@ export default function CourseDetails() {
       } else {
         await enrollCourse(courseId)
         toast.success('Successfully enrolled in course')
+        navigate('/learning')
       }
     } catch (error) {
       console.error('Error during enrollment action:', error)
@@ -207,14 +210,23 @@ export default function CourseDetails() {
             </div>
             <button
               onClick={handleEnroll}
-              disabled={enrollmentLoading}
-              className={`shrink-0 px-6 py-2.5 rounded-lg text-xs font-semibold transition-all duration-300 whitespace-nowrap shadow-sm hover:shadow-md disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2 ${enrolled ? "bg-black text-white hover:bg-gray-800" : "bg-blue-600 text-white hover:bg-blue-700"
+              disabled={enrollmentLoading || completed}
+              className={`shrink-0 px-6 py-2.5 rounded-lg text-xs font-semibold transition-all duration-300 whitespace-nowrap shadow-sm hover:shadow-md disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2 ${completed
+                ? "bg-green-100 text-green-700 hover:bg-green-100"
+                : enrolled
+                  ? "bg-black text-white hover:bg-gray-800"
+                  : "bg-blue-600 text-white hover:bg-blue-700"
                 }`}
             >
               {enrollmentLoading ? (
                 <>
                   <Loader size={14} className="animate-spin" />
                   {enrolled ? "Unenrolling..." : "Enrolling..."}
+                </>
+              ) : completed ? (
+                <>
+                  <CheckCircle size={16} />
+                  <span>Completed</span>
                 </>
               ) : (
                 <>

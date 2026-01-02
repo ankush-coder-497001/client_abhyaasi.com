@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { FaBook, FaClock, FaUserGraduate } from "react-icons/fa";
-import { Loader, X } from "lucide-react";
+import { Loader, X, CheckCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const LearningCard = ({ data, isEnrolled, onEnroll, isLoading }) => {
+const LearningCard = ({ data, isEnrolled, isCompleted, onEnroll, isLoading }) => {
   const navigate = useNavigate();
   const [showUnenrollModal, setShowUnenrollModal] = useState(false);
 
@@ -77,34 +77,44 @@ const LearningCard = ({ data, isEnrolled, onEnroll, isLoading }) => {
           >
             View Details
           </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              if (isEnrolled) {
-                setShowUnenrollModal(true);
-              } else {
-                onEnroll && onEnroll();
-              }
-            }}
-            disabled={isLoading}
-            className={`flex-1 px-3 py-2 rounded-lg font-medium text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${isEnrolled
-              ? "bg-green-600 text-white hover:bg-green-700"
-              : "bg-blue-600 text-white hover:bg-blue-700"
-              }`}
-          >
-            {isLoading ? (
-              <>
-                <Loader size={14} className="animate-spin" />
-                <span>Loading...</span>
-              </>
-            ) : isEnrolled ? (
-              <>
-                <span>✓ Enrolled</span>
-              </>
-            ) : (
-              "Enroll"
-            )}
-          </button>
+          {isCompleted ? (
+            <button
+              disabled
+              className="flex-1 px-3 py-2 rounded-lg bg-green-100 text-green-700 font-medium text-sm transition-colors cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              <CheckCircle size={16} />
+              <span>Completed</span>
+            </button>
+          ) : (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                if (isEnrolled) {
+                  setShowUnenrollModal(true);
+                } else {
+                  onEnroll && onEnroll();
+                }
+              }}
+              disabled={isLoading}
+              className={`flex-1 px-3 py-2 rounded-lg font-medium text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${isEnrolled
+                ? "bg-green-600 text-white hover:bg-green-700"
+                : "bg-blue-600 text-white hover:bg-blue-700"
+                }`}
+            >
+              {isLoading ? (
+                <>
+                  <Loader size={14} className="animate-spin" />
+                  <span>Loading...</span>
+                </>
+              ) : isEnrolled ? (
+                <>
+                  <span>✓ Enrolled</span>
+                </>
+              ) : (
+                "Enroll"
+              )}
+            </button>
+          )}
         </div>
       </div>
 

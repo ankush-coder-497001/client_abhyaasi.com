@@ -77,7 +77,7 @@ const PremiumCalendar = () => {
       <div className="p-2.5">
         {/* Days of Week Header */}
         <div className="grid grid-cols-7 gap-1 mb-2">
-          {["S", "M", "T", "W", "T", "F", "S"].map((day) => (
+          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
             <div
               key={day}
               className="text-center text-xs font-bold text-gray-500 py-0.5"

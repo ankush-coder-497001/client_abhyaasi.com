@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Search, Filter, BookOpen, Loader } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import LearningCard from "../../components/ui/LearningCard";
 import { useApp } from "../../context/AppContext";
 
 const Courses = () => {
-  const { courses, coursesLoading, enrollCourse, unenrollCourse, enrollmentLoading, isCoursEnrolled } = useApp();
+  const navigate = useNavigate();
+  const { courses, coursesLoading, enrollCourse, unenrollCourse, enrollmentLoading, isCoursEnrolled, isCourseCompleted } = useApp();
   const [filterDifficulty, setFilterDifficulty] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -29,6 +31,7 @@ const Courses = () => {
         // Enroll in course
         await enrollCourse(courseId);
         toast.success('Successfully enrolled in course');
+        navigate('/learning');
       }
     } catch (error) {
       console.error('Error toggling enrollment:', error);
@@ -109,6 +112,7 @@ const Courses = () => {
             key={course._id}
             data={course}
             isEnrolled={isCoursEnrolled(course._id)}
+            isCompleted={isCourseCompleted(course._id)}
             onEnroll={() => handleEnroll(course._id)}
             isLoading={enrollmentLoading}
           />
