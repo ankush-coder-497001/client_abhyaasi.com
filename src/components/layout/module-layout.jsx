@@ -1,5 +1,3 @@
-'use client';
-
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, BookOpen, Brain, Code2, Briefcase, Loader, CheckCircle } from 'lucide-react';
@@ -99,70 +97,59 @@ export default function ModuleLayout() {
   const activeTitle = SECTIONS.find(s => s.id === activeSection)?.title || '';
 
   return (
-    <div className="h-screen bg-white flex flex-col text-gray-900">
-      <nav className="fixed top-0 left-0 right-0 border-b border-gray-200 bg-white z-40">
-        <div className="flex items-center justify-between h-16 px-4 md:px-6">
+    <div className="h-screen bg-gradient-to-br from-white via-blue-50 to-white flex flex-col text-gray-900">
+      {/* Minimal Top Bar */}
+      <nav className="fixed top-0 left-0 right-0 bg-white z-40 border-b border-gray-100">
+        <div className="flex items-center justify-between h-16 px-6 md:px-8">
+          {/* Left Section - Logo & Module Info */}
           <div className="flex items-center gap-3 flex-1 min-w-0">
-            <div className="shrink-0 w-8 h-8 bg-linier-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center hover:shadow-lg hover:shadow-blue-600/50 transition-all">
+            <div className="shrink-0 w-9 h-9 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-300">
               <span className="text-white font-bold text-xs">L</span>
             </div>
-            <div className="min-w-0 h-[100px] flex-1">
+            <div className="min-w-0 flex-1">
               {loading ? (
                 <div className="flex items-center gap-2">
                   <Loader className="w-4 h-4 animate-spin text-blue-600" />
-                  <p className="text-sm text-gray-600">Loading module...</p>
+                  <p className="text-xs text-gray-500 font-medium">Loading...</p>
                 </div>
               ) : error ? (
-                <p className="text-sm text-red-600 font-medium">{error}</p>
+                <p className="text-xs text-red-600 font-semibold">{error}</p>
               ) : (
-                <>
-                  <h1 className="text-black! md:text-lg font-bold">{moduleData?.title || 'Module'}</h1>
-                  <p className="text-xs text-gray-500 font-medium">{moduleData?.description || 'Learning Module'} • {activeTitle}</p>
-                </>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-gray-900 text-sm font-bold truncate">{moduleData?.title || 'Module'}</h1>
+                    <span className="inline-block px-2 py-0.5 bg-blue-50 text-blue-700 text-xs font-semibold rounded border border-blue-200 shrink-0">
+                      #{moduleData?.order || '1'}
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-500 font-medium mt-0.5 flex items-center gap-1.5">
+                    <span className="inline-block w-1 h-1 rounded-full bg-blue-600"></span>
+                    <span>{activeTitle}</span>
+                  </p>
+                </div>
               )}
             </div>
           </div>
 
-          {/* Auto-changing message */}
-          <p className="hidden md:block text-xs md:text-sm text-blue-600 font-medium text-right max-w-xs transition-all duration-500 text-pretty">
-            {USER_MESSAGES[messageIndex]}
-          </p>
-
-          {/* Next Module Button */}
-          {moduleData?.isProfessionCompleted ? (
-            <button
-              onClick={async () => {
-                await refetchUser();
-                navigate('/learning');
-              }}
-              className="ml-4 px-4 py-2 bg-purple-600 text-white text-sm font-semibold rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2 whitespace-nowrap"
-            >
-              <CheckCircle className="w-4 h-4" />
-              Next
-            </button>
-          ) : moduleData?.isCourseCompleted ? (
-            <button
-              onClick={async () => {
-                await refetchUser();
-                navigate('/learning');
-              }}
-              className="ml-4 px-4 py-2 bg-purple-600 text-white text-sm font-semibold rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2 whitespace-nowrap"
-            >
-              <CheckCircle className="w-4 h-4" />
-              Next
-            </button>
-          ) : moduleData?.isModuleCompleted ? (
-            <button
-              onClick={async () => {
-                await refetchUser();
-                setActiveSection('theory');
-              }}
-              className="ml-4 px-4 py-2 bg-purple-600 text-white text-sm font-semibold rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2 whitespace-nowrap"
-            >
-              <CheckCircle className="w-4 h-4" />
-              Next
-            </button>
-          ) : null}
+          {/* Right Section - Action Button */}
+          <div className="flex items-center justify-end">
+            {moduleData?.isProfessionCompleted || moduleData?.isCourseCompleted || moduleData?.isModuleCompleted ? (
+              <button
+                onClick={async () => {
+                  await refetchUser();
+                  if (moduleData?.isProfessionCompleted || moduleData?.isCourseCompleted) {
+                    navigate('/learning');
+                  } else {
+                    setActiveSection('theory');
+                  }
+                }}
+                className="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-xs font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center gap-2 whitespace-nowrap shadow-sm hover:shadow-md"
+              >
+                <CheckCircle className="w-3.5 h-3.5" />
+                <span>Continue</span>
+              </button>
+            ) : null}
+          </div>
         </div>
       </nav>
 
@@ -170,39 +157,53 @@ export default function ModuleLayout() {
         {loading ? (
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center">
-              <Loader className="w-12 h-12 animate-spin text-blue-600 mx-auto mb-4" />
-              <p className="text-gray-600 font-medium">Loading module...</p>
+              <div className="inline-block">
+                <Loader className="w-16 h-16 animate-spin text-blue-600 mb-4" />
+              </div>
+              <p className="text-gray-700 font-semibold text-lg">Loading module...</p>
+              <p className="text-gray-500 text-sm mt-1">Please wait a moment</p>
             </div>
           </div>
         ) : error ? (
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center">
-              <p className="text-red-600 font-medium text-lg mb-2">Error</p>
-              <p className="text-gray-600">{error}</p>
+              <p className="text-red-600 font-bold text-2xl mb-2">⚠️</p>
+              <p className="text-red-600 font-semibold text-lg mb-2">Error Loading Module</p>
+              <p className="text-gray-600 mb-4">{error}</p>
+              <button
+                onClick={fetchModule}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm"
+              >
+                Try Again
+              </button>
             </div>
           </div>
         ) : (
           <>
+            {/* Premium Sidebar */}
             <div
-              className={`bg-gray-50 border-r border-gray-200 flex flex-col transition-all duration-300 ease-in-out overflow-hidden ${sidebarOpen ? 'w-48' : 'w-0'
+              className={`bg-white border-r border-gray-200 flex flex-col transition-all duration-300 ease-in-out overflow-hidden ${sidebarOpen ? 'w-56' : 'w-0'
                 }`}
             >
               {/* Sidebar Header */}
-              <div className="px-4 py-4 border-b border-gray-200">
-                <h2 className="text-gray-900 font-bold text-sm">LearnHub</h2>
+              <div className="px-5 py-6 border-b border-gray-200 bg-gradient-to-b from-blue-50 to-transparent">
+                <h2 className="text-gray-900 font-bold text-base tracking-tight">Navigation</h2>
                 {user?.currentProfession && (
-                  <p className="text-purple-600 text-xs mt-0.5 font-semibold">{user.currentProfession.name}</p>
-                )}
-                {user?.currentCourse && (
-                  <p className="text-blue-600 text-xs mt-0.5 font-semibold truncate" title={typeof user.currentCourse === 'object' ? user.currentCourse.title : 'Course'}>
-                    {typeof user.currentCourse === 'object' ? user.currentCourse.title?.substring(0, 20) : 'Course'}
+                  <p className="text-blue-600 text-xs mt-2.5 font-semibold flex items-center gap-1.5">
+                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+                    {user.currentProfession.name}
                   </p>
                 )}
-                <p className="text-gray-500 text-xs mt-0.5">{moduleData?.title?.substring(0, 20) || 'Learning'}</p>
+                {user?.currentCourse && (
+                  <p className="text-gray-700 text-xs mt-2 font-medium truncate" title={typeof user.currentCourse === 'object' ? user.currentCourse.title : 'Course'}>
+                    {typeof user.currentCourse === 'object' ? user.currentCourse.title?.substring(0, 25) : 'Course'}
+                  </p>
+                )}
+                <p className="text-gray-500 text-xs mt-1.5 font-medium">{moduleData?.title?.substring(0, 25) || 'Learning'}</p>
               </div>
 
               {/* Section Navigation */}
-              <nav className="flex-1 overflow-y-auto px-2 py-2 space-y-1">
+              <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1.5">
                 {SECTIONS.map((section) => {
                   const Icon = section.icon;
 
@@ -218,25 +219,29 @@ export default function ModuleLayout() {
                     <button
                       key={section.id}
                       onClick={() => setActiveSection(section.id)}
-                      className={`w-full flex items-center gap-2 px-2 py-2 rounded transition-all text-xs font-medium ${activeSection === section.id
-                        ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 text-sm font-semibold group ${activeSection === section.id
+                        ? 'bg-gradient-to-r from-blue-600 to-blue-600 text-white shadow-lg shadow-blue-500/20'
+                        : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100 active:bg-gray-200'
                         }`}
                     >
-                      <Icon className="w-3.5 h-3.5 shrink-0" />
-                      <span className="hidden sm:inline flex-1 text-left">{section.title}</span>
+                      <Icon className={`w-4.5 h-4.5 shrink-0 transition-transform duration-200 ${activeSection === section.id ? 'scale-110' : 'group-hover:scale-110'}`} />
+                      <span className="flex-1 text-left">{section.title}</span>
                       {isCompleted && (
-                        <CheckCircle className={`w-3.5 h-3.5 shrink-0 ${activeSection === section.id ? 'text-white' : 'text-green-600'}`} />
+                        <CheckCircle className={`w-4 h-4 shrink-0 transition-all ${activeSection === section.id ? 'text-white scale-100' : 'text-green-500 scale-100'}`} />
                       )}
                     </button>
                   );
                 })}
               </nav>
 
-
+              {/* Sidebar Footer */}
+              <div className="border-t border-gray-200 px-3 py-4 bg-gradient-to-t from-blue-50 to-transparent">
+                <p className="text-xs text-gray-600 font-medium text-center">Keep learning</p>
+              </div>
             </div>
 
-            <div className="flex-1 overflow-auto">
+            {/* Main Content Area */}
+            <div className="flex-1 overflow-auto bg-gradient-to-br from-white via-blue-50/30 to-white">
               <PageTransition>
                 {renderSection()}
               </PageTransition>
@@ -245,16 +250,17 @@ export default function ModuleLayout() {
         )}
       </div>
 
-      {/* Toggle button */}
+      {/* Premium Toggle Sidebar Button */}
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="fixed left-0 top-1/2 -translate-y-1/2 bg-linear-to-r from-blue-600 to-blue-700 text-white p-1.5 rounded-r-lg hover:from-blue-700 hover:to-blue-800 transition-all z-50 shadow-lg hover:shadow-xl"
+        className="fixed left-0 top-1/2 -translate-y-1/2 bg-gradient-to-b from-blue-600 to-blue-700 text-white p-2 rounded-r-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300 z-50 shadow-lg hover:shadow-2xl hover:shadow-blue-500/30 transform hover:scale-110 active:scale-95"
         aria-label="Toggle sidebar"
+        title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
       >
         {sidebarOpen ? (
-          <ChevronLeft className="w-3.5 h-3.5" />
+          <ChevronLeft className="w-4 h-4 transition-transform" />
         ) : (
-          <ChevronRight className="w-3.5 h-3.5" />
+          <ChevronRight className="w-4 h-4 transition-transform" />
         )}
       </button>
     </div>

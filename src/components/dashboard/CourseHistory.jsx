@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 import { FaCheckCircle, FaTrophy } from "react-icons/fa";
 import { useApp } from "../../context/AppContext";
-import HierarchicalDetailsSidebar from "./HierarchicalDetailsSidebar";
+import CompletedDetailsModal from "../modals/CompletedDetailsModal";
 
 const CourseHistory = () => {
   const { getUserCompletedCourses } = useApp();
   const [selectedCourse, setSelectedCourse] = useState(null);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   // Get completed courses from context helper
   const completedCourses = getUserCompletedCourses() || [];
 
   const handleCourseClick = (course) => {
     setSelectedCourse(course);
-    setSidebarOpen(true);
+    setModalOpen(true);
   };
 
   return (
@@ -92,10 +92,10 @@ const CourseHistory = () => {
         </div>
       </div>
 
-      {/* Details Sidebar */}
-      <HierarchicalDetailsSidebar
-        isOpen={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
+      {/* Details Modal */}
+      <CompletedDetailsModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
         item={selectedCourse}
         type="course"
       />

@@ -29,48 +29,48 @@ function ModuleProgressItem({ module, index, setExpandedModule, expandedModule }
         onClick={() => setExpandedModule(isExpanded ? null : module._id)}
         className="w-full transition-all duration-300"
       >
-        <div className="px-6 py-5 flex items-start justify-between gap-4 border border-gray-200 rounded-xl bg-white hover:border-blue-400 hover:shadow-lg transition-all duration-300">
+        <div className="px-5 py-4 flex items-start justify-between gap-4 border border-slate-200 rounded-lg bg-white hover:border-blue-300 hover:shadow-md transition-all duration-300">
           {/* Module number and title */}
-          <div className="flex items-center gap-4 flex-1 min-w-0">
-            <div className={`shrink-0 w-10 h-10 flex items-center justify-center rounded-lg text-sm font-bold text-white ${isModuleCompleted ? 'bg-green-600' : 'bg-blue-600'
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            <div className={`shrink-0 w-9 h-9 flex items-center justify-center rounded-lg text-sm font-bold text-white ${isModuleCompleted ? 'bg-emerald-600' : 'bg-blue-600'
               }`}>
-              {isModuleCompleted ? <CheckCircle className="w-5 h-5" /> : index + 1}
+              {isModuleCompleted ? <CheckCircle className="w-4 h-4" /> : index + 1}
             </div>
             <div className="min-w-0 text-left">
-              <h3 className="text-base font-semibold text-black truncate">{module.title}</h3>
-              <p className="text-xs text-gray-500 mt-1.5">
-                Module {index + 1} • {module.topics?.length || 0} topics
+              <h3 className="text-sm font-semibold text-slate-900 truncate">{module.title}</h3>
+              <p className="text-xs text-slate-500 mt-1">
+                {module.topics?.length || 0} topics
               </p>
             </div>
           </div>
 
           {/* Progress display */}
-          <div className="flex items-center gap-4 shrink-0">
-            <div className="flex flex-col items-center gap-2">
-              <div className="relative w-24 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+          <div className="flex items-center gap-3 shrink-0">
+            <div className="flex flex-col items-center gap-1.5">
+              <div className="relative w-20 h-1 bg-slate-200 rounded-full overflow-hidden">
                 <div
-                  className={`h-full transition-all duration-500 ${isModuleCompleted ? 'bg-green-600' : 'bg-blue-600'
+                  className={`h-full transition-all duration-500 ${isModuleCompleted ? 'bg-linear-to-r from-emerald-500 to-emerald-600' : 'bg-linear-to-r from-blue-600 to-blue-500'
                     }`}
                   style={{ width: `${progress}%` }}
                 />
               </div>
-              <span className={`text-xs font-semibold ${isModuleCompleted ? 'text-green-600' : 'text-blue-600'
+              <span className={`text-xs font-bold ${isModuleCompleted ? 'text-emerald-600' : 'text-blue-600'
                 }`}>
                 {progress}%
               </span>
             </div>
 
             {isModuleCompleted && (
-              <div className="px-4 py-2 bg-green-50 text-green-700 text-xs font-semibold rounded-lg border border-green-200 flex items-center gap-2">
-                <CheckCircle className="w-3.5 h-3.5" />
-                Completed
+              <div className="px-3 py-1.5 bg-emerald-50 text-emerald-700 text-xs font-semibold rounded-md border border-emerald-200 flex items-center gap-1.5 whitespace-nowrap">
+                <CheckCircle className="w-3 h-3" />
+                Done
               </div>
             )}
           </div>
 
           {/* Chevron */}
           <ChevronDown
-            className={`w-4 h-4 text-gray-400 transition-transform duration-300 shrink-0 ${isExpanded ? 'rotate-180' : ''
+            className={`w-4 h-4 text-slate-400 transition-transform duration-300 shrink-0 ${isExpanded ? 'rotate-180' : ''
               }`}
           />
         </div>
@@ -78,72 +78,64 @@ function ModuleProgressItem({ module, index, setExpandedModule, expandedModule }
 
       {/* Expanded section - Show MCQ and Coding status */}
       {isExpanded && (
-        <div className="border border-t-0 border-gray-200 rounded-b-xl bg-gray-50 px-6 py-4 space-y-4 animate-in fade-in duration-300">
+        <div className="border border-t-0 border-slate-200 rounded-b-lg bg-slate-50/50 px-5 py-3 space-y-3 animate-in fade-in duration-300">
           {/* Topics */}
           {module.topics && module.topics.length > 0 && (
             <div className="space-y-2">
-              <p className="text-xs font-semibold text-gray-600 uppercase">Topics Covered</p>
-              {module.topics.map((topic, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-center justify-between text-xs px-4 py-2.5 rounded-lg bg-white border border-gray-150 hover:border-blue-300 transition-all duration-200"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-blue-600" />
-                    <p className="text-gray-700 font-medium">
+              <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide">Topics</p>
+              <div className="space-y-1.5">
+                {module.topics.map((topic, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-center gap-2 text-xs px-3 py-2 rounded-md bg-white border border-slate-200 hover:border-blue-300 transition-all duration-200"
+                  >
+                    <div className="w-1 h-1 rounded-full bg-blue-600 shrink-0" />
+                    <p className="text-slate-700 font-medium truncate">
                       {typeof topic === 'string' ? topic : topic.title || 'Topic'}
                     </p>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           )}
 
           {/* Assessment Status */}
-          <div className="space-y-2 mt-4">
-            <p className="text-xs font-semibold text-gray-600 uppercase">Assessment Status</p>
+          <div className="space-y-2">
+            <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide">Assessment</p>
 
             {/* MCQ Status */}
-            <div className={`flex items-center justify-between px-4 py-3 rounded-lg border ${isMcqCompleted
-              ? 'bg-green-50 border-green-200'
-              : 'bg-yellow-50 border-yellow-200'
+            <div className={`flex items-center justify-between px-3 py-2.5 rounded-md border text-xs transition-colors ${isMcqCompleted
+              ? 'bg-emerald-50/60 border-emerald-200 text-emerald-700'
+              : 'bg-amber-50/60 border-amber-200 text-amber-700'
               }`}>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 {isMcqCompleted ? (
-                  <CheckCircle className="w-4 h-4 text-green-600" />
+                  <CheckCircle className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                 ) : (
-                  <AlertCircle className="w-4 h-4 text-yellow-600" />
+                  <AlertCircle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
                 )}
-                <span className={`text-xs font-semibold ${isMcqCompleted ? 'text-green-700' : 'text-yellow-700'
-                  }`}>
-                  Multiple Choice Questions
-                </span>
+                <span className="font-medium">MCQ</span>
               </div>
-              <span className={`text-xs font-bold ${isMcqCompleted ? 'text-green-600' : 'text-yellow-600'
-                }`}>
-                {isMcqCompleted ? '✓ Passed' : 'Not Attempted'}
+              <span className="font-semibold">
+                {isMcqCompleted ? '✓' : '○'}
               </span>
             </div>
 
             {/* Coding Status */}
-            <div className={`flex items-center justify-between px-4 py-3 rounded-lg border ${isCodingCompleted
-              ? 'bg-green-50 border-green-200'
-              : 'bg-yellow-50 border-yellow-200'
+            <div className={`flex items-center justify-between px-3 py-2.5 rounded-md border text-xs transition-colors ${isCodingCompleted
+              ? 'bg-emerald-50/60 border-emerald-200 text-emerald-700'
+              : 'bg-amber-50/60 border-amber-200 text-amber-700'
               }`}>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 {isCodingCompleted ? (
-                  <CheckCircle className="w-4 h-4 text-green-600" />
+                  <CheckCircle className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                 ) : (
-                  <AlertCircle className="w-4 h-4 text-yellow-600" />
+                  <AlertCircle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
                 )}
-                <span className={`text-xs font-semibold ${isCodingCompleted ? 'text-green-700' : 'text-yellow-700'
-                  }`}>
-                  Coding Challenge
-                </span>
+                <span className="font-medium">Coding</span>
               </div>
-              <span className={`text-xs font-bold ${isCodingCompleted ? 'text-green-600' : 'text-yellow-600'
-                }`}>
-                {isCodingCompleted ? '✓ Passed' : 'Not Attempted'}
+              <span className="font-semibold">
+                {isCodingCompleted ? '✓' : '○'}
               </span>
             </div>
           </div>
@@ -370,18 +362,18 @@ export default function Learning() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900">
-      {/* Header */}
-      <div className="border-b border-gray-200 bg-white sticky top-0 z-30">
-        <div className="max-w-5xl mx-auto px-6 py-6 flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-black tracking-tight">My Learning</h1>
+    <div className="min-h-screen bg-white text-slate-900">
+      {/* Floating Header */}
+      <div className="sticky top-0 z-40 backdrop-blur-sm bg-white/80 border-b border-slate-200/50">
+        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+          <div className="flex-1">
+            <h1 className="text-3xl font-bold text-slate-900 tracking-tight">My Learning</h1>
+            <p className="text-sm text-slate-600 mt-1">{currentCourse.title}</p>
             {userData?.currentProfession && (
-              <p className="text-xs text-purple-600 font-semibold mt-1">
-                📚 Career Path: {userData.currentProfession.name}
+              <p className="text-xs text-blue-600 font-semibold mt-1">
+                Career Path: {userData.currentProfession.name}
               </p>
             )}
-            <p className="text-gray-600 mt-2">{currentCourse.title}</p>
           </div>
 
           {/* Resume Button */}
@@ -393,10 +385,10 @@ export default function Learning() {
                 return (
                   <button
                     onClick={() => window.open(`/module`, '_blank')}
-                    className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-md hover:shadow-lg flex items-center gap-2 whitespace-nowrap"
+                    className="ml-6 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-2 whitespace-nowrap"
                   >
                     <Play className="w-4 h-4" />
-                    Continue Learning
+                    Continue
                   </button>
                 );
               }
@@ -405,128 +397,156 @@ export default function Learning() {
           })()}
         </div>
 
-        {/* Overall progress bar with detailed state info */}
-        <div className="w-full px-6 py-3 bg-gray-50 border-t border-gray-200">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-gray-600 uppercase">
-              {userData?.currentProfession ? '📚 Profession Progress' : '📖 Course Progress'}
-            </span>
-            <span className="text-xs font-bold text-blue-600">
-              {overallProgress}% • {moduleStats.fullyCompleted} completed, {moduleStats.partiallyCompleted} in progress, {moduleStats.notStarted} not started
-            </span>
-          </div>
-          <div className="relative h-2.5 bg-gray-200 rounded-full overflow-hidden">
-            {/* Completed segment (green) */}
-            <div
-              className="h-full bg-green-600 transition-all duration-500"
-              style={{ width: `${(moduleStats.fullyCompleted / totalModules) * 100}%` }}
-            />
-            {/* In Progress segment (blue) - positioned after completed */}
-            <div
-              className="absolute top-0 left-0 h-full bg-blue-600 transition-all duration-500"
-              style={{
-                width: `${((moduleStats.fullyCompleted + moduleStats.partiallyCompleted) / totalModules) * 100}%`
-              }}
-            />
+        {/* Premium Progress Bar */}
+        <div className="w-full px-6 py-4 border-t border-slate-200/50">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
+                Progress Overview
+              </span>
+              <span className="text-sm font-bold text-blue-600">
+                {overallProgress}%
+              </span>
+            </div>
+            <div className="relative h-2 bg-slate-200/60 rounded-full overflow-hidden">
+              {/* Completed segment */}
+              <div
+                className="h-full bg-linear-to-r from-emerald-500 to-emerald-600 transition-all duration-500"
+                style={{ width: `${(moduleStats.fullyCompleted / totalModules) * 100}%` }}
+              />
+              {/* In Progress segment */}
+              <div
+                className="absolute top-0 left-0 h-full bg-linear-to-r from-blue-500 to-blue-600 transition-all duration-500"
+                style={{
+                  width: `${((moduleStats.fullyCompleted + moduleStats.partiallyCompleted) / totalModules) * 100}%`
+                }}
+              />
+            </div>
+            <div className="flex items-center gap-4 mt-2 text-xs text-slate-600">
+              <div className="flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-full bg-emerald-600" />
+                <span>{moduleStats.fullyCompleted} Completed</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-full bg-blue-600" />
+                <span>{moduleStats.partiallyCompleted} In Progress</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-full bg-slate-300" />
+                <span>{moduleStats.notStarted} Not Started</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Main content */}
+      {/* Main Content */}
       <div className="w-full px-6 py-10">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           {/* If enrolled through profession - show all courses */}
           {userData?.currentProfession && professionCourses ? (
-            <div className="space-y-6">
-              {/* Profession Header */}
-              <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold">📚</span>
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+              {/* Left side - Profession Info (40%) */}
+              <div className="lg:col-span-2 space-y-6">
+                {/* Profession Header Card */}
+                <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 bg-blue-600/10 rounded-lg flex items-center justify-center shrink-0">
+                      <span className="text-blue-600 font-bold">🎯</span>
+                    </div>
+                    <div>
+                      <p className="text-xs text-slate-500 font-semibold uppercase tracking-wide">Career Path</p>
+                      <h2 className="text-lg font-bold text-slate-900">{userData.currentProfession.name}</h2>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-500 font-semibold uppercase">Career Path</p>
-                    <h2 className="text-xl font-bold text-gray-900">{userData.currentProfession.name}</h2>
-                  </div>
+                  {userData.currentProfession?.description && (
+                    <p className="text-sm text-slate-600 leading-relaxed">{userData.currentProfession.description}</p>
+                  )}
                 </div>
-                <div className="flex items-center gap-3 text-xs text-gray-600 mt-4">
-                  <span>Courses: <strong>{professionCourses.length}</strong></span>
+
+                {/* Stats Cards */}
+                <div className="space-y-3">
+                  <div className="bg-white rounded-lg border border-slate-200 p-4 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-slate-600 font-medium">Total Progress</span>
+                      <span className="text-2xl font-bold text-blue-600">{overallProgress}%</span>
+                    </div>
+                  </div>
+                  <div className="bg-white rounded-lg border border-slate-200 p-4 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-slate-600 font-medium">Modules</span>
+                      <span className="text-lg font-semibold text-slate-900">{moduleStats.fullyCompleted}/{totalModules}</span>
+                    </div>
+                    <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden mt-2">
+                      <div
+                        className="h-full bg-linear-to-r from-blue-600 to-blue-500 transition-all duration-500"
+                        style={{ width: `${(moduleStats.fullyCompleted / totalModules) * 100}%` }}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* All Courses in Profession */}
-              <div className="space-y-3">
-                {professionCourses.map((courseItem, idx) => {
-                  const courseId = courseItem.course?._id || courseItem.course;
-                  const courseData = courseItem.course;
-                  const isExpanded = expandedCourses[courseId];
+              {/* Right side - Courses List (60%) */}
+              <div className="lg:col-span-3">
+                <div className="space-y-4">
+                  <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wide px-1">Courses in Path</h3>
+                  {professionCourses.map((courseItem, idx) => {
+                    const courseData = courseItem.course;
+                    if (!courseData) return null;
 
-                  // Get modules for this course with progress
-                  let courseModules = [];
-                  if (courseData && Array.isArray(courseData.modules)) {
-                    courseModules = courseData.modules.map(module => {
-                      const progress = userData?.moduleProgress?.find(p => p.moduleId === module._id);
-                      return {
-                        ...module,
-                        isMcqCompleted: progress?.isMcqCompleted || false,
-                        isCodingCompleted: progress?.isCodingCompleted || false,
-                        mcqScore: progress?.mcqScore || 0,
-                        codingScore: progress?.codingScore || 0
-                      };
-                    });
-                  }
+                    const courseProgress = (() => {
+                      if (!Array.isArray(courseData.modules)) return 0;
+                      let completed = 0;
+                      courseData.modules.forEach(module => {
+                        const moduleId = module._id?.toString() || module._id;
+                        const progress = userData?.moduleProgress?.find(p => {
+                          const pModuleId = p.moduleId?.toString() || p.moduleId;
+                          return pModuleId === moduleId;
+                        });
+                        if (progress?.isMcqCompleted && progress?.isCodingCompleted) completed++;
+                      });
+                      return courseData.modules.length > 0 ? Math.round((completed / courseData.modules.length) * 100) : 0;
+                    })();
 
-                  const courseCompletedModules = courseModules.filter(m => m.isMcqCompleted && m.isCodingCompleted).length;
-                  const courseTotalModules = courseModules.length;
-                  const courseProgress = courseTotalModules > 0 ? Math.round((courseCompletedModules / courseTotalModules) * 100) : 0;
+                    const isExpanded = expandedCourses[courseData._id];
 
-                  return (
-                    <div key={courseId} className="border border-gray-200 rounded-xl overflow-hidden bg-white">
-                      <button
-                        onClick={() => setExpandedCourses({ ...expandedCourses, [courseId]: !isExpanded })}
-                        className="w-full px-6 py-5 flex items-center justify-between gap-4 bg-white hover:bg-gray-50 transition-colors"
-                      >
-                        <div className="flex items-center gap-4 flex-1 min-w-0">
-                          <div className="shrink-0 w-10 h-10 flex items-center justify-center rounded-lg bg-blue-600 text-white font-bold text-sm">
-                            {idx + 1}
-                          </div>
-                          <div className="min-w-0 text-left">
-                            <h3 className="text-base font-semibold text-black truncate">{courseData?.title || 'Course'}</h3>
-                            <p className="text-xs text-gray-500 mt-1">
-                              {courseTotalModules} modules • {courseCompletedModules} completed
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-3 shrink-0">
-                          <div className="text-right">
-                            <div className="text-sm font-bold text-blue-600">{courseProgress}%</div>
-                            <div className="w-20 h-1.5 bg-gray-200 rounded-full overflow-hidden mt-1 relative">
-                              {/* Completed part (green) */}
-                              <div
-                                className="absolute top-0 left-0 h-full bg-green-600 transition-all duration-500"
-                                style={{ width: `${(courseCompletedModules / courseTotalModules) * 100}%` }}
-                              />
-                              {/* In progress part (blue) */}
-                              <div
-                                className="absolute top-0 left-0 h-full bg-blue-600 transition-all duration-500"
-                                style={{ width: `${courseProgress}%` }}
-                              />
+                    return (
+                      <div key={courseData._id} className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+                        <button
+                          onClick={() => setExpandedCourses(prev => ({ ...prev, [courseData._id]: !prev[courseData._id] }))}
+                          className="w-full px-5 py-4 flex items-center justify-between hover:bg-slate-50/50 transition-colors"
+                        >
+                          <div className="flex items-center gap-3 flex-1 text-left">
+                            <div className="flex-1">
+                              <h3 className="font-semibold text-slate-900">{courseData.title}</h3>
+                              <p className="text-xs text-slate-500 mt-1">
+                                {courseData.modules?.length || 0} modules
+                              </p>
                             </div>
-                            <p className="text-xs text-gray-500 mt-0.5">{courseCompletedModules} done</p>
                           </div>
-                          <ChevronDown
-                            className={`w-5 h-5 text-gray-400 transition-transform duration-300 shrink-0 ${isExpanded ? 'rotate-180' : ''}`}
-                          />
-                        </div>
-                      </button>
 
-                      {/* Course modules - only show if expanded */}
-                      {isExpanded && (
-                        <div className="border-t border-gray-200 bg-gray-50 px-6 py-4">
-                          <div className="space-y-4">
-                            {courseModules.length > 0 ? (
-                              courseModules.map((module, moduleIdx) => (
+                          <div className="flex items-center gap-3 shrink-0">
+                            <div className="text-right">
+                              <div className="text-sm font-bold text-blue-600">{courseProgress}%</div>
+                              <div className="w-20 h-1.5 bg-slate-200 rounded-full overflow-hidden mt-1">
+                                <div
+                                  className="h-full bg-linear-to-r from-blue-600 to-blue-500 transition-all duration-500"
+                                  style={{ width: `${courseProgress}%` }}
+                                />
+                              </div>
+                            </div>
+                            <ChevronDown
+                              className={`w-5 h-5 text-slate-400 transition-transform duration-300 shrink-0 ${isExpanded ? 'rotate-180' : ''}`}
+                            />
+                          </div>
+                        </button>
+
+                        {/* Course modules - only show if expanded */}
+                        {isExpanded && (
+                          <div className="border-t border-slate-200 bg-slate-50/50 px-5 py-4 space-y-3">
+                            {courseData.modules?.length > 0 ? (
+                              courseData.modules.map((module, moduleIdx) => (
                                 <ModuleProgressItem
                                   key={module._id}
                                   module={module}
@@ -536,69 +556,96 @@ export default function Learning() {
                                 />
                               ))
                             ) : (
-                              <p className="text-center text-gray-600 py-8">No modules available</p>
+                              <p className="text-center text-slate-500 py-4 text-sm">No modules available</p>
                             )}
                           </div>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           ) : (
             // Direct course enrollment - show modules directly
-            <div className="space-y-6">
-              {/* Course Info */}
-              <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <p className="text-xs text-gray-500 font-semibold uppercase">Current Course</p>
-                    <h2 className="text-2xl font-bold text-gray-900 mt-1">{currentCourse.title}</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+              {/* Left side - Course Info (40%) */}
+              <div className="lg:col-span-2 space-y-6">
+                {/* Course Header Card */}
+                <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 bg-blue-600/10 rounded-lg flex items-center justify-center shrink-0">
+                      <span className="text-blue-600 font-bold">📖</span>
+                    </div>
+                    <div>
+                      <p className="text-xs text-slate-500 font-semibold uppercase tracking-wide">Current Course</p>
+                      <h2 className="text-lg font-bold text-slate-900">{currentCourse.title}</h2>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <div className="text-3xl font-bold text-blue-600">{overallProgress}%</div>
-                    <p className="text-xs text-gray-600">{completedModules}/{totalModules} modules</p>
+                  {currentCourse.description && (
+                    <p className="text-sm text-slate-600 leading-relaxed">{currentCourse.description}</p>
+                  )}
+                </div>
+
+                {/* Stats Cards */}
+                <div className="space-y-3">
+                  <div className="bg-white rounded-lg border border-slate-200 p-4 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-slate-600 font-medium">Overall Progress</span>
+                      <span className="text-2xl font-bold text-blue-600">{overallProgress}%</span>
+                    </div>
+                  </div>
+                  <div className="bg-white rounded-lg border border-slate-200 p-4 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-slate-600 font-medium">Modules</span>
+                      <span className="text-lg font-semibold text-slate-900">{completedModules}/{totalModules}</span>
+                    </div>
+                    <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden mt-2">
+                      <div
+                        className="h-full bg-linear-to-r from-blue-600 to-blue-500 transition-all duration-500"
+                        style={{ width: `${(completedModules / totalModules) * 100}%` }}
+                      />
+                    </div>
                   </div>
                 </div>
-                {currentCourse.description && (
-                  <p className="text-sm text-gray-600 leading-relaxed mt-4">{currentCourse.description}</p>
-                )}
               </div>
 
-              {/* Modules List */}
-              <div className="space-y-4">
-                {modules.length > 0 ? (
-                  modules.map((module, index) => (
-                    <ModuleProgressItem
-                      key={module._id}
-                      module={module}
-                      index={index}
-                      setExpandedModule={setExpandedModule}
-                      expandedModule={expandedModule}
-                    />
-                  ))
-                ) : (
-                  <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
-                    <p className="text-gray-600">No modules available</p>
-                  </div>
-                )}
+              {/* Right side - Modules List (60%) */}
+              <div className="lg:col-span-3">
+                <div className="space-y-4">
+                  <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wide px-1">Learning Modules</h3>
+                  {modules.length > 0 ? (
+                    modules.map((module, index) => (
+                      <ModuleProgressItem
+                        key={module._id}
+                        module={module}
+                        index={index}
+                        setExpandedModule={setExpandedModule}
+                        expandedModule={expandedModule}
+                      />
+                    ))
+                  ) : (
+                    <div className="text-center py-12 bg-white rounded-lg border border-slate-200">
+                      <p className="text-slate-600">No modules available</p>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           )}
 
           {/* Completion message */}
           {completedModules === totalModules && totalModules > 0 && (
-            <div className="mt-12 p-8 bg-linear-to-r from-green-50 to-emerald-50 rounded-xl border-2 border-green-300 text-center">
-              <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
-              <h2 className="text-2xl font-bold text-green-700 mb-2">🎉 Course Completed!</h2>
-              <p className="text-green-600 mb-4">Congratulations on completing all modules in <strong>{currentCourse.title}</strong>!</p>
+            <div className="mt-12 p-8 bg-linear-to-br from-emerald-50 to-green-50 rounded-xl border border-emerald-200 text-center shadow-sm">
+              <CheckCircle className="w-16 h-16 text-emerald-600 mx-auto mb-4" />
+              <h2 className="text-2xl font-bold text-emerald-700 mb-2">🎉 Congratulations!</h2>
+              <p className="text-emerald-600 mb-4">You've successfully completed all modules in <strong>{currentCourse.title}</strong>!</p>
               {userData?.currentProfession && (
-                <p className="text-sm text-green-700 mb-6">You're making great progress in your <strong>{userData.currentProfession.name}</strong> career path.</p>
+                <p className="text-sm text-emerald-700 mb-6">You're making great progress in your <strong>{userData.currentProfession.name}</strong> career path.</p>
               )}
               <button
                 onClick={() => navigate('/courses')}
-                className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors duration-200"
+                className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg transition-colors duration-200"
               >
                 Explore More Courses
               </button>
