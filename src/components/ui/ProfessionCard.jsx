@@ -8,16 +8,16 @@ const ProfessionCard = ({ data, isEnrolled, isCompleted, onEnroll, isLoading }) 
   const [showUnenrollModal, setShowUnenrollModal] = useState(false);
 
   return (
-    <div className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all overflow-hidden group border border-gray-100 flex flex-col h-full">
+    <div className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all overflow-hidden group border border-slate-100 flex flex-col h-full">
       {/* Thumbnail */}
-      <div className="relative h-60 bg-gray-200 overflow-hidden">
+      <div className="relative h-60 bg-slate-200 overflow-hidden">
         <img
           src={data.thumbnail}
           alt={data.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
         <div className="absolute top-3 right-3">
-          <span className="text-xs font-semibold px-2 py-1 rounded-full bg-purple-100 text-purple-700 capitalize">
+          <span className="text-xs font-semibold px-2 py-1 rounded-full bg-blue-100 text-blue-700 capitalize">
             Profession
           </span>
         </div>
@@ -26,27 +26,27 @@ const ProfessionCard = ({ data, isEnrolled, isCompleted, onEnroll, isLoading }) 
       {/* Content */}
       <div className="p-4 flex flex-col grow">
         {/* Title */}
-        <h3 className="text-lg font-semibold text-gray-800 mb-2 line-clamp-2">
+        <h3 className="text-lg font-semibold text-slate-900 mb-2 line-clamp-2">
           {data.name}
         </h3>
 
         {/* Description */}
-        <p className="text-sm text-gray-600 mb-4 line-clamp-2 grow">
+        <p className="text-sm text-slate-600 mb-4 line-clamp-2 grow">
           {data.description}
         </p>
 
         {/* Stats */}
-        <div className="flex flex-wrap gap-4 mb-4 text-xs text-gray-600">
+        <div className="flex flex-wrap gap-4 mb-4 text-xs text-slate-600">
           <div className="flex items-center gap-1">
             <FaClock className="text-blue-600" />
             <span>{data.estimatedDuration}</span>
           </div>
           <div className="flex items-center gap-1">
-            <FaBook className="text-green-600" />
+            <FaBook className="text-blue-600" />
             <span>{data.courses?.length || 0} courses</span>
           </div>
           <div className="flex items-center gap-1">
-            <FaBriefcase className="text-purple-600" />
+            <FaBriefcase className="text-blue-600" />
             <span>{data.tags?.length || 0} skills</span>
           </div>
         </div>
@@ -56,7 +56,7 @@ const ProfessionCard = ({ data, isEnrolled, isCompleted, onEnroll, isLoading }) 
           <button
             onClick={() => navigate(`/profession-details/${data._id}`)}
             disabled={isLoading}
-            className="flex-1 px-3 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 px-3 py-2 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             View Details
           </button>
@@ -80,7 +80,7 @@ const ProfessionCard = ({ data, isEnrolled, isCompleted, onEnroll, isLoading }) 
               }}
               disabled={isLoading}
               className={`flex-1 px-3 py-2 rounded-lg font-medium text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${isEnrolled
-                ? "bg-green-600 text-white hover:bg-green-700"
+                ? "bg-slate-900 text-white hover:bg-slate-800"
                 : "bg-blue-600 text-white hover:bg-blue-700"
                 }`}
             >
@@ -103,27 +103,27 @@ const ProfessionCard = ({ data, isEnrolled, isCompleted, onEnroll, isLoading }) 
 
       {/* Unenroll Confirmation Modal */}
       {showUnenrollModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full mx-4">
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full mx-4 animate-in zoom-in-95 duration-300">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-800">Unenroll from Profession</h3>
+              <h3 className="text-lg font-semibold text-slate-900">Unenroll from Profession</h3>
               <button
                 onClick={() => setShowUnenrollModal(false)}
-                className="text-gray-500 hover:text-gray-700 transition-colors"
+                className="p-1 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-all duration-200"
               >
                 <X size={20} />
               </button>
             </div>
 
-            <p className="text-gray-600 mb-6">
-              Are you sure you want to unenroll from <strong>{data.name}</strong>? Your progress will be saved, but you'll lose access to the profession content.
+            <p className="text-sm text-slate-600 mb-6">
+              Are you sure you want to unenroll from <strong className="text-slate-900">{data.name}</strong>? Your progress will be saved, but you'll lose access to the profession content.
             </p>
 
             <div className="flex gap-3">
               <button
                 onClick={() => setShowUnenrollModal(false)}
                 disabled={isLoading}
-                className="flex-1 px-4 py-2 rounded-lg bg-gray-200 text-gray-800 hover:bg-gray-300 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-4 py-2 rounded-lg bg-slate-100 text-slate-900 hover:bg-slate-200 font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Cancel
               </button>
@@ -133,7 +133,7 @@ const ProfessionCard = ({ data, isEnrolled, isCompleted, onEnroll, isLoading }) 
                   onEnroll && onEnroll();
                 }}
                 disabled={isLoading}
-                className="flex-1 px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 font-medium transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 font-medium transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
               >
                 {isLoading ? (
                   <>

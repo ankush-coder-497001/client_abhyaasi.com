@@ -122,72 +122,73 @@ export default function ResultModal({
   };
 
   return (
-    <div className="fixed inset-0  bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 animate-fade-in p-4">
       <div
-        className={`bg-white rounded-lg shadow-2xl max-w-md w-full mx-4 overflow-hidden transform transition-all duration-300 ${showAnimation ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+        className={`bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden transform transition-all duration-500 ${showAnimation ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
           }`}
       >
-        {/* Header */}
-        <div className={`border-b ${getBgColor()} p-4 flex items-start justify-between`}>
-          <div className="flex items-start gap-3">
-            <div className={`${getIconColor()} mt-1`}>
+        {/* Header with Gradient */}
+        <div className={`relative overflow-hidden p-6 ${getBgColor()}`}>
+          <div className="absolute inset-0 opacity-20 bg-gradient-to-br from-white to-transparent"></div>
+          <div className="relative flex items-start gap-4">
+            <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${getBgColor()} border-2 ${isPassed ? 'border-green-300' : isProfessionCompleted || isCourseCompleted ? 'border-purple-300' : 'border-yellow-300'
+              }`}>
               {(isCourseCompleted || isProfessionCompleted || isModuleCompleted) ? (
-                <Trophy className="w-6 h-6" />
+                <Trophy className={`w-6 h-6 ${getIconColor()}`} />
               ) : isPassed ? (
-                <CheckCircle className="w-6 h-6" />
+                <CheckCircle className={`w-6 h-6 ${getIconColor()}`} />
               ) : (
-                <AlertCircle className="w-6 h-6" />
+                <AlertCircle className={`w-6 h-6 ${getIconColor()}`} />
               )}
             </div>
-            <div>
-              <h2 className={`text-lg font-bold ${getScoreColor()}`}>{getTitle()}</h2>
+            <div className="flex-1">
+              <h2 className={`text-xl font-bold ${getScoreColor()}`}>{getTitle()}</h2>
             </div>
+            {!(type === 'coding' && isPassed) && !isModuleCompleted && !isCourseCompleted && !isProfessionCompleted && (
+              <button
+                onClick={onClose}
+                className="p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-white/80 transition-all duration-200"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            )}
           </div>
-          {/* Hide close button for passed coding, module completed, or course/profession completed */}
-          {!(type === 'coding' && isPassed) && !isModuleCompleted && !isCourseCompleted && !isProfessionCompleted && (
-            <button
-              onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          )}
         </div>
 
         {/* Score Display */}
-        <div className="p-6 text-center">
-          <div className={`text-5xl font-bold ${getScoreColor()} mb-2`}>
+        <div className="px-6 py-8 text-center border-b border-gray-100">
+          <div className={`text-6xl font-bold ${getScoreColor()} mb-3 tracking-tight`}>
             {result.score?.toFixed(1) || 0}%
           </div>
           {type === 'coding' && result.testResults && (
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-sm text-gray-600 font-medium">
               {result.testResults.filter(r => r.passed).length}/{result.testResults.length} Tests Passed
             </p>
           )}
           {type === 'mcq' && (
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-sm text-gray-600 font-medium">
               Attempt #{result.attemptNumber || 1}
             </p>
           )}
         </div>
 
         {/* Message */}
-        <div className="px-6 pb-4">
-          <p className="text-gray-700 text-center text-sm leading-relaxed">
+        <div className="px-6 py-6 border-b border-gray-100">
+          <p className="text-gray-700 text-center text-sm leading-relaxed font-medium">
             {getMessage()}
           </p>
         </div>
 
         {/* Test Results Summary for Coding */}
         {type === 'coding' && result.testResults && result.testResults.length > 0 && !isPassed && (
-          <div className="px-6 pb-4 border-t border-gray-100">
-            <p className="text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Test Details:</p>
-            <div className="space-y-1 max-h-32 overflow-y-auto">
+          <div className="px-6 py-4 border-b border-gray-100 bg-gray-50">
+            <p className="text-xs font-bold text-gray-600 uppercase tracking-widest mb-3">Test Details</p>
+            <div className="space-y-2 max-h-40 overflow-y-auto">
               {result.testResults.map((test, idx) => (
-                <div key={test.testcaseId || idx} className="flex items-center gap-2 text-xs">
+                <div key={test.testcaseId || idx} className="flex items-center gap-3 text-xs">
                   <div className={`w-2 h-2 rounded-full shrink-0 ${test.passed ? 'bg-green-600' : 'bg-red-600'}`}></div>
-                  <span className="text-gray-700">Test Case {idx + 1}</span>
-                  <span className={`ml-auto font-semibold ${test.passed ? 'text-green-600' : 'text-red-600'}`}>
+                  <span className="text-gray-700 flex-1">Test Case {idx + 1}</span>
+                  <span className={`ml-auto font-bold ${test.passed ? 'text-green-600' : 'text-red-600'}`}>
                     {test.passed ? '✓' : '✗'}
                   </span>
                 </div>
@@ -198,19 +199,17 @@ export default function ResultModal({
 
         {/* Cooldown Information */}
         {cooldownInfo?.isInCooldown && (
-          <div className="px-6 pb-4 border-t border-red-100 bg-red-50">
-            <div className="flex items-center gap-2 mb-2">
+          <div className="px-6 py-4 border-b border-red-100 bg-red-50">
+            <div className="flex items-center gap-2 mb-3">
               <Lock className="w-4 h-4 text-red-600" />
-              <p className="text-sm font-semibold text-red-900">Section Locked</p>
+              <p className="text-sm font-bold text-red-900">Section Locked</p>
             </div>
-            <p className="text-xs text-red-800 mb-2">
-              You're in cooldown. Try again after:
-            </p>
-            <div className="bg-white rounded px-3 py-2 text-center">
-              <p className="text-2xl font-bold text-red-600">
+            <p className="text-xs text-red-800 mb-3 font-medium">Try again after:</p>
+            <div className="bg-white rounded-lg px-4 py-3 text-center border border-red-100">
+              <p className="text-3xl font-bold text-red-600 font-mono">
                 {cooldownTimeRemaining ? formatTime(cooldownTimeRemaining) : 'Refreshing...'}
               </p>
-              <p className="text-xs text-gray-600 mt-1">
+              <p className="text-xs text-gray-600 mt-2 font-medium">
                 Attempt {cooldownInfo.attemptNumber || 1}
               </p>
             </div>
@@ -219,40 +218,53 @@ export default function ResultModal({
 
         {/* Completion Messages */}
         {(isCourseCompleted || isProfessionCompleted || isModuleCompleted) && (
-          <div className={`px-6 pb-4 border-t ${isPassed ? 'border-green-100' : 'border-gray-100'}`}>
-            <div className="flex items-center gap-2 text-sm">
-              <Zap className="w-4 h-4 text-yellow-500" />
-              <p className="text-gray-700 font-medium">
-                {isCourseCompleted && 'Your certificate is ready!'}
-                {isProfessionCompleted && 'You are now a certified professional!'}
-                {isModuleCompleted && 'Amazing progress! Keep it up!'}
+          <div className="px-6 py-4 border-b border-purple-100 bg-purple-50">
+            <div className="flex items-center gap-3">
+              <Zap className="w-5 h-5 text-yellow-500" />
+              <p className="text-sm text-gray-800 font-bold">
+                {isCourseCompleted && '🎓 Your certificate is ready!'}
+                {isProfessionCompleted && '🏆 You are now a certified professional!'}
+                {isModuleCompleted && '⭐ Amazing progress! Keep it up!'}
               </p>
             </div>
           </div>
         )}
 
         {/* Action Buttons */}
-        <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex gap-3">
-          {/* Show Close button only if: NOT (passed coding OR module/course/profession completed) */}
+        <div className="px-6 py-5 bg-gradient-to-b from-white to-gray-50 flex gap-3">
           {!(type === 'coding' && isPassed) && !isModuleCompleted && !isCourseCompleted && !isProfessionCompleted && (
             <button
               onClick={onClose}
-              className="flex-1 px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors text-sm font-medium"
+              className="flex-1 px-4 py-2.5 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-all duration-200 text-sm font-semibold border border-gray-200 hover:border-gray-300 active:scale-95"
             >
               Close
             </button>
           )}
           <button
             onClick={onNext}
-            className={`${(type === 'coding' && isPassed) || isModuleCompleted || isCourseCompleted || isProfessionCompleted ? 'w-full' : 'flex-1'} px-4 py-2 text-white rounded-lg transition-colors text-sm font-medium ${isCourseCompleted || isProfessionCompleted
-              ? 'bg-purple-600 hover:bg-purple-700'
-              : 'bg-blue-600 hover:bg-blue-700'
-              }`}
+            className={`${(type === 'coding' && isPassed) || isModuleCompleted || isCourseCompleted || isProfessionCompleted ? 'w-full' : 'flex-1'} px-4 py-2.5 text-white rounded-lg transition-all duration-200 text-sm font-semibold ${isCourseCompleted || isProfessionCompleted
+              ? 'bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 shadow-lg shadow-purple-500/30'
+              : 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg shadow-blue-500/30'
+              } active:scale-95`}
           >
             {getButtonText()}
           </button>
         </div>
       </div>
+
+      <style>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        .animate-fade-in {
+          animation: fadeIn 0.3s ease-out;
+        }
+      `}</style>
     </div>
   );
 }

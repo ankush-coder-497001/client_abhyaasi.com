@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { FaCheckCircle, FaTrophy } from "react-icons/fa";
 import { useApp } from "../../context/AppContext";
-import HierarchicalDetailsSidebar from "./HierarchicalDetailsSidebar";
+import CompletedDetailsModal from "../modals/CompletedDetailsModal";
 
 const CompletedProfessions = () => {
   const { getUserCompletedProfessions } = useApp();
   const [selectedProfession, setSelectedProfession] = useState(null);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   // Get completed professions from context helper
   const completedProfessions = getUserCompletedProfessions() || [];
@@ -15,7 +15,7 @@ const CompletedProfessions = () => {
 
   const handleProfessionClick = (profession) => {
     setSelectedProfession(profession);
-    setSidebarOpen(true);
+    setModalOpen(true);
   };
 
   return (
@@ -24,10 +24,10 @@ const CompletedProfessions = () => {
         {/* Header */}
         <div className="mb-xs">
           <div className="flex items-center gap-xs mb-xs">
-            <FaTrophy className="text-purple-500" size={12} />
-            <h2 className="text-sm font-semibold text-gray-900">Completed Professions</h2>
+            <FaTrophy className="text-blue-600" size={12} />
+            <h2 className="text-sm font-semibold text-slate-900">Completed Professions</h2>
           </div>
-          <p className="text-xs text-gray-600">{completedProfessions.length} professions</p>
+          <p className="text-xs text-slate-600">{completedProfessions.length} professions</p>
         </div>
 
         {/* Professions List */}
@@ -37,7 +37,7 @@ const CompletedProfessions = () => {
               <div
                 key={profession._id || profession.id}
                 onClick={() => handleProfessionClick(profession)}
-                className="premium-card-compact p-xs hover:bg-purple-50 transition-colors cursor-pointer hover:shadow-md"
+                className="premium-card-compact p-xs hover:bg-blue-50 transition-colors cursor-pointer hover:shadow-md border border-slate-200 rounded-lg bg-gradient-to-r from-slate-50 to-blue-50"
               >
                 <div className="flex items-start gap-xs">
                   {/* Icon */}
@@ -49,17 +49,17 @@ const CompletedProfessions = () => {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-xs">
                       <div className="flex-1">
-                        <h3 className="premium-heading-sm text-gray-900 mb-xs text-xs">
+                        <h3 className="premium-heading-sm text-slate-900 mb-xs text-xs">
                           {profession.title || profession.name || "Profession"}
                         </h3>
                         <div className="flex flex-wrap gap-xs items-center">
-                          <span className="premium-text-sm text-gray-600 text-xs">
+                          <span className="premium-text-sm text-slate-600 text-xs">
                             {profession.completionMetadata?.completedDate
                               ? new Date(profession.completionMetadata.completedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
                               : "Recently completed"}
                           </span>
-                          <span className="text-xs text-gray-500">•</span>
-                          <span className="premium-text-sm text-gray-600 text-xs">
+                          <span className="text-xs text-slate-500">•</span>
+                          <span className="premium-text-sm text-slate-600 text-xs">
                             {profession.estimatedDuration || ""}
                           </span>
                         </div>
@@ -68,13 +68,13 @@ const CompletedProfessions = () => {
                       {/* Points and Certificate */}
                       <div className="flex flex-col items-end gap-xs shrink-0">
                         {profession.completionMetadata?.points && (
-                          <div className="premium-badge premium-badge-purple text-xs">
+                          <div className="px-2 py-1 rounded-lg bg-blue-100 text-blue-700 font-semibold text-xs">
                             +{profession.completionMetadata.points}
                           </div>
                         )}
                         {profession.completionMetadata?.certificate && (
-                          <div className="premium-badge premium-badge-success text-xs">
-                            ✓
+                          <div className="px-2 py-1 rounded-lg bg-green-100 text-green-700 font-semibold text-xs">
+                            ✓ Certificate
                           </div>
                         )}
                       </div>
@@ -85,8 +85,8 @@ const CompletedProfessions = () => {
             ))
           ) : (
             <div className="p-4 text-center">
-              <p className="text-xs text-gray-600">No professions completed yet</p>
-              <p className="text-xs text-gray-500 mt-1">Complete all courses in a profession to earn the badge!</p>
+              <p className="text-xs text-slate-600">No professions completed yet</p>
+              <p className="text-xs text-slate-500 mt-1">Complete all courses in a profession to earn the badge!</p>
             </div>
           )}
         </div>
@@ -94,17 +94,17 @@ const CompletedProfessions = () => {
         {/* Total Points */}
         <div className="premium-divider mt-sm"></div>
         <div className="flex items-center justify-between pt-sm">
-          <span className="premium-heading-sm text-gray-600 text-xs">Total</span>
-          <span className="premium-heading-sm text-purple-600">
+          <span className="premium-heading-sm text-slate-600 text-xs">Total Points</span>
+          <span className="premium-heading-sm text-blue-600 font-bold">
             {completedProfessions.reduce((sum, profession) => sum + (profession.completionMetadata?.points || 0), 0)}
           </span>
         </div>
       </div>
 
-      {/* Details Sidebar */}
-      <HierarchicalDetailsSidebar
-        isOpen={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
+      {/* Details Modal */}
+      <CompletedDetailsModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
         item={selectedProfession}
         type="profession"
       />
