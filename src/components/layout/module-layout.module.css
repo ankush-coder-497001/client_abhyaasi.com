@@ -11,11 +11,34 @@
 }
 
 .module-title {
-  @apply text-gray-900 font-bold text-lg tracking-tight leading-tight;
+  @apply text-gray-900 font-bold text-xs md:text-sm lg:text-lg tracking-tight leading-tight;
 }
 
 .module-subtitle {
-  @apply text-gray-500 text-xs font-medium flex items-center gap-2;
+  @apply text-gray-500 text-xs font-medium flex items-center gap-1 md:gap-2;
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 768px) {
+  .module-container {
+    @apply pb-20;
+  }
+
+  .content-padding {
+    @apply p-3 md:p-4;
+  }
+
+  .section-title {
+    @apply text-lg md:text-xl font-bold;
+  }
+
+  .section-subtitle {
+    @apply text-xs md:text-sm;
+  }
+
+  .responsive-spacing {
+    @apply space-y-3 md:space-y-4 lg:space-y-5;
+  }
 }
 
 /* Sidebar Button Premium Styling */

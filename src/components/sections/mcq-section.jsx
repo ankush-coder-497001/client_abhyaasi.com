@@ -160,36 +160,37 @@ export default function MCQSection({ moduleData, moduleId, onSuccess, onNavigate
         cooldownInfo={moduleData?.mcqCooldown}
       />
 
-      {/* Header */}
-      <div className="px-6 py-5 bg-white border-b border-[#E1E1E1] shrink-0">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#0056D2]/10 rounded-lg">
-              <Brain className="w-5 h-5 text-[#0056D2]" />
+      {/* Header - Responsive */}
+      <div className="px-3 md:px-6 py-3 md:py-5 bg-white border-b border-[#E1E1E1] shrink-0">
+        <div className="flex items-center justify-between mb-3 md:mb-4 gap-2">
+          <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
+            <div className="p-1.5 md:p-2 bg-[#0056D2]/10 rounded-lg shrink-0">
+              <Brain className="w-4 md:w-5 h-4 md:h-5 text-[#0056D2]" />
             </div>
-            <div>
-              <h2 className="text-lg font-bold tracking-tight text-[#1F1F1F]">Knowledge Check</h2>
-              <p className="text-sm text-[#636363]">Select the best answer for each question</p>
+            <div className="min-w-0">
+              <h2 className="text-base md:text-lg font-bold tracking-tight text-[#1F1F1F] truncate">Knowledge Check</h2>
+              <p className="text-xs md:text-sm text-[#636363] hidden sm:block">Select the best answer for each question</p>
             </div>
           </div>
           {(isMcqAlreadyCompleted || submitted) && (
             <div
-              className={`px-3 py-1.5 rounded-full text-sm font-bold border ${submissionResult?.passed || isMcqAlreadyCompleted
+              className={`px-2 md:px-3 py-1 md:py-1.5 rounded-full text-xs md:text-sm font-bold border shrink-0 ${submissionResult?.passed || isMcqAlreadyCompleted
                 ? "bg-[#E7F3EF] text-[#006944] border-[#B2D6C9]"
                 : "bg-[#FFF3E0] text-[#E65100] border-[#FFE0B2]"
                 }`}
             >
-              Score: {submissionResult?.score?.toFixed(0) || mcqScore.toFixed(0)}%
+              {submissionResult?.score?.toFixed(0) || mcqScore.toFixed(0)}%
             </div>
           )}
         </div>
 
-        {/* Progress Section */}
-        <div className="space-y-2">
+        {/* Progress Section - Responsive */}
+        <div className="space-y-1.5 md:space-y-2">
           <div className="flex justify-between text-xs font-bold uppercase tracking-wider text-[#636363]">
-            <span>Assessment Progress</span>
+            <span className="hidden sm:inline">Assessment Progress</span>
+            <span className="sm:hidden">Progress</span>
             <span>
-              {progress} of {mcqs.length} answered
+              {progress} / {mcqs.length}
             </span>
           </div>
           <div className="h-1.5 w-full bg-[#E1E1E1] rounded-full overflow-hidden">
@@ -201,17 +202,17 @@ export default function MCQSection({ moduleData, moduleId, onSuccess, onNavigate
         </div>
       </div>
 
-      {/* Main Content Area */}
-      <div className="flex-1 overflow-y-auto px-6 py-8 space-y-8 custom-scrollbar">
+      {/* Main Content Area - Responsive */}
+      <div className="flex-1 overflow-y-auto px-3 md:px-6 py-4 md:py-8 space-y-4 md:space-y-8 custom-scrollbar pb-20 md:pb-0">
         {isInCooldown && (
-          <div className="flex items-center gap-4 p-4 bg-[#FFF3E0] border border-[#FFE0B2] rounded-xl animate-in fade-in slide-in-from-top-2">
-            <div className="p-2 bg-white rounded-full">
-              <Lock className="w-5 h-5 text-[#E65100]" />
+          <div className="flex items-center gap-2 md:gap-4 p-2.5 md:p-4 bg-[#FFF3E0] border border-[#FFE0B2] rounded-lg md:rounded-xl animate-in fade-in slide-in-from-top-2">
+            <div className="p-1.5 md:p-2 bg-white rounded-full shrink-0">
+              <Lock className="w-3.5 md:w-5 h-3.5 md:h-5 text-[#E65100]" />
             </div>
-            <div className="flex-1">
-              <p className="text-sm font-bold text-[#E65100]">Cooldown in effect</p>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs md:text-sm font-bold text-[#E65100]">Cooldown in effect</p>
               <p className="text-xs text-[#636363]">
-                Next attempt available in{" "}
+                Available in{" "}
                 {cooldownTimeRemaining !== null ? formatCountdown(cooldownTimeRemaining) : "..."}
               </p>
             </div>
@@ -224,14 +225,14 @@ export default function MCQSection({ moduleData, moduleId, onSuccess, onNavigate
             className="group animate-in fade-in slide-in-from-bottom-4"
             style={{ animationDelay: `${idx * 100}ms` }}
           >
-            <div className="flex gap-4 mb-4">
-              <span className="flex items-center justify-center w-8 h-8 rounded-full bg-white border border-[#E1E1E1] text-sm font-bold text-[#1F1F1F] shrink-0 shadow-sm">
+            <div className="flex gap-2 md:gap-4 mb-2.5 md:mb-4">
+              <span className="flex items-center justify-center w-6 md:w-8 h-6 md:h-8 rounded-full bg-white border border-[#E1E1E1] text-xs md:text-sm font-bold text-[#1F1F1F] shrink-0 shadow-sm">
                 {idx + 1}
               </span>
-              <p className="text-[15px] font-medium leading-relaxed text-[#1F1F1F] pt-1">{mcq.question}</p>
+              <p className="text-xs md:text-[15px] font-medium leading-relaxed text-[#1F1F1F] pt-0.5 md:pt-1">{mcq.question}</p>
             </div>
 
-            <div className="grid gap-3 pl-12">
+            <div className="grid gap-2 md:gap-3 pl-8 md:pl-12">
               {mcq.options.map((option, index) => {
                 const isSelected = selectedAnswers[mcq.id] === index
                 const isCorrect = submitted && index === mcq.correctOptionIndex
@@ -243,30 +244,30 @@ export default function MCQSection({ moduleData, moduleId, onSuccess, onNavigate
                     onClick={() => handleSelectOption(mcq.id, index)}
                     disabled={submitted || isMcqAlreadyCompleted || isNoAttemptsLeft}
                     className={`
-                      relative w-full text-left px-5 py-4 rounded-xl border-2 transition-all duration-200 group/btn
+                      relative w-full text-left px-3 md:px-5 py-2.5 md:py-4 rounded-lg md:rounded-xl border-2 transition-all duration-200 group/btn
                       ${isSelected ? "border-[#0056D2] bg-white shadow-md" : "border-transparent bg-white hover:border-[#E1E1E1] shadow-sm"}
-                      ${isCorrect ? "!border-[#006944] !bg-[#E7F3EF]" : ""}
-                      ${isWrong ? "!border-[#D32F2F] !bg-[#FFEBEE]" : ""}
+                      ${isCorrect ? "border-[#006944]! bg-[#E7F3EF]!" : ""}
+                      ${isWrong ? "border-[#D32F2F]! bg-[#FFEBEE]!" : ""}
                       ${submitted || isNoAttemptsLeft ? "cursor-default" : "cursor-pointer active:scale-[0.99]"}
                     `}
                   >
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2 md:gap-4">
                       <div
                         className={`
-                        w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors
+                        w-4 md:w-5 h-4 md:h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors
                         ${isSelected ? "border-[#0056D2]" : "border-[#E1E1E1] group-hover/btn:border-[#0056D2]"}
-                        ${isCorrect ? "!border-[#006944]" : ""}
-                        ${isWrong ? "!border-[#D32F2F]" : ""}
+                        ${isCorrect ? "border-[#006944]!" : ""}
+                        ${isWrong ? "border-[#D32F2F]!" : ""}
                       `}
                       >
                         {(isSelected || isCorrect || isWrong) && (
                           <div
-                            className={`w-2.5 h-2.5 rounded-full ${isCorrect ? "bg-[#006944]" : isWrong ? "bg-[#D32F2F]" : "bg-[#0056D2]"
+                            className={`w-2 md:w-2.5 h-2 md:h-2.5 rounded-full ${isCorrect ? "bg-[#006944]" : isWrong ? "bg-[#D32F2F]" : "bg-[#0056D2]"
                               }`}
                           />
                         )}
                       </div>
-                      <span className={`text-[15px] ${isSelected ? "font-bold text-[#1F1F1F]" : "text-[#3D3D3D]"}`}>
+                      <span className={`text-xs md:text-[15px] ${isSelected ? "font-bold text-[#1F1F1F]" : "text-[#3D3D3D]"} flex-wrap`}>
                         {option}
                       </span>
                     </div>
@@ -276,47 +277,48 @@ export default function MCQSection({ moduleData, moduleId, onSuccess, onNavigate
             </div>
 
             {submitted && selectedAnswers[mcq.id] !== undefined && (
-              <div className="mt-4 ml-12 p-4 bg-white border border-[#E1E1E1] rounded-xl shadow-sm animate-in zoom-in-95">
-                <div className="flex items-center gap-2 mb-2">
+              <div className="mt-2 md:mt-4 ml-8 md:ml-12 p-2.5 md:p-4 bg-white border border-[#E1E1E1] rounded-lg md:rounded-xl shadow-sm animate-in zoom-in-95">
+                <div className="flex items-center gap-1.5 md:gap-2 mb-1.5 md:mb-2">
                   {selectedAnswers[mcq.id] === mcq.correctOptionIndex ? (
-                    <CheckCircle className="w-4 h-4 text-[#006944]" />
+                    <CheckCircle className="w-3.5 md:w-4 h-3.5 md:h-4 text-[#006944] shrink-0" />
                   ) : (
-                    <AlertCircle className="w-4 h-4 text-[#D32F2F]" />
+                    <AlertCircle className="w-3.5 md:w-4 h-3.5 md:h-4 text-[#D32F2F] shrink-0" />
                   )}
                   <span className="text-xs font-bold uppercase tracking-wider text-[#636363]">Explanation</span>
                 </div>
-                <p className="text-sm leading-relaxed text-[#3D3D3D]">{mcq.explanation}</p>
+                <p className="text-xs md:text-sm leading-relaxed text-[#3D3D3D]">{mcq.explanation}</p>
               </div>
             )}
           </div>
         ))}
       </div>
 
-      {/* Footer Actions */}
-      <div className="px-6 py-6 bg-white border-t border-[#E1E1E1] flex gap-4 shrink-0 shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
+      {/* Footer Actions - Responsive and Fixed on Mobile */}
+      <div className="fixed md:relative bottom-20 md:bottom-0 left-0 right-0 px-3 md:px-6 py-3 md:py-6 bg-white border-t border-[#E1E1E1] md:flex md:gap-4 md:shrink-0 md:shadow-[0_-4px_20px_rgba(0,0,0,0.03)] z-30 md:z-auto">
         {submitted ? (
           <button
             onClick={handleReset}
             disabled={isInCooldown || (cooldownUntil && new Date() < cooldownUntil)}
-            className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-[#3D3D3D] bg-white border-2 border-[#E1E1E1] hover:bg-[#F8F9FA] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-2 px-4 md:px-6 py-2.5 md:py-3.5 rounded-lg md:rounded-xl font-bold text-xs md:text-base text-[#3D3D3D] bg-white border-2 border-[#E1E1E1] hover:bg-[#F8F9FA] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {(isInCooldown || (cooldownUntil && new Date() < cooldownUntil)) ? (
               <>
-                <Lock className="w-4 h-4" />
+                <Lock className="w-3.5 md:w-4 h-3.5 md:h-4" />
                 Locked
               </>
             ) : submissionResult?.passed || isMcqAlreadyCompleted ? (
-              "Review Content"
+              <span className="hidden sm:inline">Review Content</span>
             ) : (
-              "Try Again"
+              <span className="hidden sm:inline">Try Again</span>
             )}
+            {(isInCooldown || (cooldownUntil && new Date() < cooldownUntil)) ? null : (submissionResult?.passed || isMcqAlreadyCompleted) ? <span className="sm:hidden">Review</span> : <span className="sm:hidden">Retry</span>}
           </button>
         ) : (
           <button
             onClick={handleSubmit}
             disabled={progress < mcqs.length || isLoading || isInCooldown || isMcqAlreadyCompleted || isNoAttemptsLeft}
             className={`
-              flex-1 flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-white shadow-lg transition-all
+              w-full flex items-center justify-center gap-2 px-4 md:px-6 py-2.5 md:py-3.5 rounded-lg md:rounded-xl font-bold text-xs md:text-base text-white shadow-lg transition-all
               ${progress < mcqs.length || isLoading || isInCooldown || isMcqAlreadyCompleted || isNoAttemptsLeft
                 ? "bg-[#E1E1E1] cursor-not-allowed shadow-none text-[#636363]"
                 : "bg-[#0056D2] hover:bg-[#00419E] hover:-translate-y-0.5 active:translate-y-0"
@@ -324,21 +326,23 @@ export default function MCQSection({ moduleData, moduleId, onSuccess, onNavigate
             `}
           >
             {isLoading ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
+              <Loader2 className="w-4 md:w-5 h-4 md:h-5 animate-spin" />
             ) : isNoAttemptsLeft ? (
               <>
-                <Lock className="w-5 h-5" />
-                No Attempts Left
+                <Lock className="w-4 md:w-5 h-4 md:h-5" />
+                <span className="hidden sm:inline">No Attempts Left</span>
+                <span className="sm:hidden">No Attempts</span>
               </>
             ) : isMcqAlreadyCompleted ? (
               <>
-                <CheckCircle className="w-5 h-5" />
-                Completed
+                <CheckCircle className="w-4 md:w-5 h-4 md:h-5" />
+                <span className="hidden sm:inline">Completed</span>
               </>
             ) : (
               <>
-                Submit Assessment
-                <ChevronRight className="w-5 h-5" />
+                <span className="hidden sm:inline">Submit Assessment</span>
+                <span className="sm:hidden">Submit</span>
+                <ChevronRight className="w-4 md:w-5 h-4 md:h-5 hidden sm:inline" />
               </>
             )}
           </button>
