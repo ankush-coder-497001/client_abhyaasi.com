@@ -5,6 +5,7 @@ import "./styles/premium-dashboard.css";
 import { AppProvider } from "./context/AppContext";
 import { ChatProvider } from "./context/ChatContext";
 import { EditorThemeProvider } from "./context/EditorThemeContext";
+import ScrollToTop from "./components/ScrollToTop.jsx";
 import DashboardLayout from "./components/layout/DashboardLayout.jsx";
 import PageTransition from "./components/layout/PageTransition.jsx";
 import ProtectedRoute from "./utils/ProtectedRoute.jsx";
@@ -33,6 +34,7 @@ function App() {
     <ChatProvider>
       <EditorThemeProvider>
         <BrowserRouter>
+          <ScrollToTop />
           <AppProvider>
             <Toaster position="bottom-left" reverseOrder={false} />
             <FloatingChatButton />

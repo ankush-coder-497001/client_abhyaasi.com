@@ -98,41 +98,41 @@ export default function ModuleLayout() {
 
   return (
     <div className="h-screen bg-gradient-to-br from-white via-blue-50 to-white flex flex-col text-gray-900">
-      {/* Minimal Top Bar */}
+      {/* Minimal Top Bar - Responsive */}
       <nav className="fixed top-0 left-0 right-0 bg-white z-40 border-b border-gray-100">
-        <div className="flex items-center justify-between h-16 px-6 md:px-8">
+        <div className="flex items-center justify-between h-14 md:h-16 px-3 md:px-8 gap-2 md:gap-4">
           {/* Left Section - Logo & Module Info */}
-          <div className="flex items-center gap-3 flex-1 min-w-0">
-            <div className="shrink-0 w-9 h-9 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-300">
+          <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
+            <div className="shrink-0 w-7 md:w-9 h-7 md:h-9 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-300">
               <span className="text-white font-bold text-xs">L</span>
             </div>
             <div className="min-w-0 flex-1">
               {loading ? (
-                <div className="flex items-center gap-2">
-                  <Loader className="w-4 h-4 animate-spin text-blue-600" />
-                  <p className="text-xs text-gray-500 font-medium">Loading...</p>
+                <div className="flex items-center gap-1.5 md:gap-2">
+                  <Loader className="w-3 md:w-4 h-3 md:h-4 animate-spin text-blue-600 shrink-0" />
+                  <p className="text-xs md:text-xs text-gray-500 font-medium truncate">Loading...</p>
                 </div>
               ) : error ? (
-                <p className="text-xs text-red-600 font-semibold">{error}</p>
+                <p className="text-xs text-red-600 font-semibold truncate">{error}</p>
               ) : (
                 <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <h1 className="text-gray-900 text-sm font-bold truncate">{moduleData?.title || 'Module'}</h1>
-                    <span className="inline-block px-2 py-0.5 bg-blue-50 text-blue-700 text-xs font-semibold rounded border border-blue-200 shrink-0">
+                  <div className="flex items-center gap-1.5 md:gap-2">
+                    <h1 className="text-gray-900 text-xs md:text-sm font-bold truncate">{moduleData?.title?.substring(0, 20) || 'Module'}</h1>
+                    <span className="hidden sm:inline-block px-1.5 md:px-2 py-0.5 bg-blue-50 text-blue-700 text-xs font-semibold rounded border border-blue-200 shrink-0">
                       #{moduleData?.order || '1'}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-500 font-medium mt-0.5 flex items-center gap-1.5">
-                    <span className="inline-block w-1 h-1 rounded-full bg-blue-600"></span>
-                    <span>{activeTitle}</span>
+                  <p className="text-xs text-gray-500 font-medium mt-0.5 flex items-center gap-1">
+                    <span className="inline-block w-1 h-1 rounded-full bg-blue-600 shrink-0"></span>
+                    <span className="truncate text-xs">{activeTitle}</span>
                   </p>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Right Section - Action Button */}
-          <div className="flex items-center justify-end">
+          {/* Right Section - Action Button - Responsive */}
+          <div className="flex items-center justify-end shrink-0">
             {moduleData?.isProfessionCompleted || moduleData?.isCourseCompleted || moduleData?.isModuleCompleted ? (
               <button
                 onClick={async () => {
@@ -143,36 +143,36 @@ export default function ModuleLayout() {
                     setActiveSection('theory');
                   }
                 }}
-                className="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-xs font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center gap-2 whitespace-nowrap shadow-sm hover:shadow-md"
+                className="px-2.5 md:px-4 py-1.5 md:py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-xs font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center gap-1.5 md:gap-2 whitespace-nowrap shadow-sm hover:shadow-md"
               >
-                <CheckCircle className="w-3.5 h-3.5" />
-                <span>Continue</span>
+                <CheckCircle className="w-3 md:w-3.5 h-3 md:h-3.5 shrink-0" />
+                <span className="hidden sm:inline">Continue</span>
               </button>
             ) : null}
           </div>
         </div>
       </nav>
 
-      <div className="flex flex-1 overflow-hidden pt-16">
+      <div className="flex flex-1 overflow-hidden pt-14 md:pt-16 pb-16 md:pb-0">
         {loading ? (
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center">
               <div className="inline-block">
-                <Loader className="w-16 h-16 animate-spin text-blue-600 mb-4" />
+                <Loader className="w-12 md:w-16 h-12 md:h-16 animate-spin text-blue-600 mb-3 md:mb-4" />
               </div>
-              <p className="text-gray-700 font-semibold text-lg">Loading module...</p>
-              <p className="text-gray-500 text-sm mt-1">Please wait a moment</p>
+              <p className="text-gray-700 font-semibold text-base md:text-lg">Loading module...</p>
+              <p className="text-gray-500 text-xs md:text-sm mt-1">Please wait a moment</p>
             </div>
           </div>
         ) : error ? (
-          <div className="flex-1 flex items-center justify-center">
+          <div className="flex-1 flex items-center justify-center p-4">
             <div className="text-center">
-              <p className="text-red-600 font-bold text-2xl mb-2">⚠️</p>
-              <p className="text-red-600 font-semibold text-lg mb-2">Error Loading Module</p>
-              <p className="text-gray-600 mb-4">{error}</p>
+              <p className="text-red-600 font-bold text-2xl md:text-3xl mb-2">⚠️</p>
+              <p className="text-red-600 font-semibold text-base md:text-lg mb-2">Error Loading Module</p>
+              <p className="text-gray-600 mb-4 text-sm md:text-base">{error}</p>
               <button
                 onClick={fetchModule}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm"
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-xs md:text-sm"
               >
                 Try Again
               </button>
@@ -180,9 +180,9 @@ export default function ModuleLayout() {
           </div>
         ) : (
           <>
-            {/* Premium Sidebar */}
+            {/* Premium Sidebar - Desktop Only */}
             <div
-              className={`bg-white border-r border-gray-200 flex flex-col transition-all duration-300 ease-in-out overflow-hidden ${sidebarOpen ? 'w-56' : 'w-0'
+              className={`hidden md:flex bg-white border-r border-gray-200 flex-col transition-all duration-300 ease-in-out overflow-hidden ${sidebarOpen ? 'w-56' : 'w-0'
                 }`}
             >
               {/* Sidebar Header */}
@@ -240,7 +240,7 @@ export default function ModuleLayout() {
               </div>
             </div>
 
-            {/* Main Content Area */}
+            {/* Main Content Area - Responsive */}
             <div className="flex-1 overflow-auto bg-gradient-to-br from-white via-blue-50/30 to-white">
               <PageTransition>
                 {renderSection()}
@@ -250,10 +250,10 @@ export default function ModuleLayout() {
         )}
       </div>
 
-      {/* Premium Toggle Sidebar Button */}
+      {/* Desktop Toggle Sidebar Button - Hidden on Mobile */}
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="fixed left-0 top-1/2 -translate-y-1/2 bg-gradient-to-b from-blue-600 to-blue-700 text-white p-2 rounded-r-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300 z-50 shadow-lg hover:shadow-2xl hover:shadow-blue-500/30 transform hover:scale-110 active:scale-95"
+        className="hidden md:flex fixed left-0 top-1/2 -translate-y-1/2 bg-gradient-to-b from-blue-600 to-blue-700 text-white p-2 rounded-r-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300 z-50 shadow-lg hover:shadow-2xl hover:shadow-blue-500/30 transform hover:scale-110 active:scale-95"
         aria-label="Toggle sidebar"
         title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
       >
@@ -263,6 +263,41 @@ export default function ModuleLayout() {
           <ChevronRight className="w-4 h-4 transition-transform" />
         )}
       </button>
+
+      {/* Mobile Bottom Navigation - Horizontal Tabs */}
+      <div className="fixed bottom-0 left-0 right-0 md:hidden bg-white border-t border-gray-200 z-40">
+        <div className="flex items-center justify-around px-2 py-2 gap-1">
+          {SECTIONS.map((section) => {
+            const Icon = section.icon;
+
+            // Check if section is completed based on moduleData
+            let isCompleted = false;
+            if (section.id === 'mcq') {
+              isCompleted = moduleData?.isMcqCompleted || false;
+            } else if (section.id === 'coding') {
+              isCompleted = moduleData?.isCodingCompleted || false;
+            }
+
+            return (
+              <button
+                key={section.id}
+                onClick={() => setActiveSection(section.id)}
+                className={`flex flex-col items-center justify-center px-2 py-1.5 rounded-lg transition-all duration-200 gap-0.5 min-w-fit ${activeSection === section.id
+                  ? 'bg-gradient-to-r from-blue-600 to-blue-600 text-white shadow-md'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                  }`}
+                title={section.title}
+              >
+                <Icon className={`w-5 h-5 shrink-0 transition-transform duration-200 ${activeSection === section.id ? 'scale-110' : ''}`} />
+                <span className="text-xs font-semibold truncate">{section.title}</span>
+                {isCompleted && (
+                  <CheckCircle className={`w-3 h-3 -mt-1 ${activeSection === section.id ? 'text-white' : 'text-green-500'}`} />
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
