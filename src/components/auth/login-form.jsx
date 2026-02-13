@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import InputField from './input-field';
 import PasswordInputField from './password-input-field';
-import Button from '../ui/button.jsx';
+import Button from '../ui/Button';
 import GoogleButton from './google-button';
 import './styles/auth-forms.css';
 import { loginUser } from '../../api_services';
