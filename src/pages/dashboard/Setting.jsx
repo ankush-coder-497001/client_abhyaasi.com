@@ -5,7 +5,6 @@ import { Lock, Mail, Trash2, Check, X, Eye, EyeOff, LogOut } from 'lucide-react'
 import { useNavigate } from 'react-router-dom';
 import LogoutModal from '../../components/modals/LogoutModal';
 import '../../styles/setting.css';
-import Button from '../../components/ui/button';
 import Loader from '../../components/ui/Loader';
 import { deleteAccount, resetPassword, updateEmail } from '../../api_services';
 import toast from 'react-hot-toast';

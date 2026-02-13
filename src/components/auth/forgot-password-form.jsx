@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import InputField from './input-field';
 import PasswordInputField from './password-input-field';
-import Button from '../ui/button';
+import Button from '../ui/button.jsx';
 import './styles/auth-forms.css';
 import { forgotPassword, forgotPasswordSendOTP, forgotPasswordVerifyOTP } from '../../api_services';
 import toast from 'react-hot-toast';
