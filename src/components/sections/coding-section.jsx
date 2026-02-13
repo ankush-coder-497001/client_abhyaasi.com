@@ -70,9 +70,7 @@ export default function CodingSection({ moduleData, moduleId, onSuccess, onNavig
   const { theme, toggleTheme } = useEditorTheme()
 
   // Get template code from server's templateFiles array
-  const templateFile = moduleData?.codingTask?.templateFiles?.find(
-    (file) => file.path.includes("main") || file.path.includes("index") || file.path.includes("Main"),
-  )
+  const templateFile = moduleData?.codingTask?.templateFiles[0]
   const templateCode = templateFile ? templateFile.content : DEFAULT_PROBLEM.templateCode
 
   // Check if coding is already completed from moduleData
@@ -342,9 +340,10 @@ export default function CodingSection({ moduleData, moduleId, onSuccess, onNavig
             {/* Description Section - Responsive text */}
             <div className="space-y-1.5 md:space-y-2">
               <h3 className="text-xs font-bold text-gray-600 uppercase tracking-wide">Description</h3>
-              <p className="text-xs md:text-sm text-gray-700 leading-relaxed">
-                {problem.description}
-              </p>
+              <div
+                className="text-xs md:text-sm text-gray-700 leading-relaxed prose prose-sm max-w-none"
+                dangerouslySetInnerHTML={{ __html: problem.description }}
+              />
             </div>
 
             {/* Examples Section - Responsive */}

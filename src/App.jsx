@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { initializeGoogleSDK } from "./utils/googleOAuth";
 import "./styles/premium-dashboard.css";
@@ -25,6 +25,8 @@ import ChatDialog from "./components/chat/ChatDialog.jsx";
 import { Toaster } from "react-hot-toast";
 
 function App() {
+  const path = window.location.pathname;
+  const isINLoginOrSignupPage = path === '/';
   useEffect(() => {
     // Initialize Google SDK on app load
     initializeGoogleSDK().catch(err => console.error('Failed to initialize Google SDK:', err));
@@ -37,7 +39,7 @@ function App() {
           <ScrollToTop />
           <AppProvider>
             <Toaster position="bottom-left" reverseOrder={false} />
-            <FloatingChatButton />
+            {!isINLoginOrSignupPage && <FloatingChatButton />}
             <ChatDialog />
 
             <Routes>
